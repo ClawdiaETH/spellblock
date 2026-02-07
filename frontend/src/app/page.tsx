@@ -29,6 +29,19 @@ const FarcasterAutoConnect = dynamicImport(
   { ssr: false }
 )
 
+const RecentCommits = dynamicImport(() => import('@/components/RecentCommits').then(mod => mod.RecentCommits), {
+  ssr: false,
+  loading: () => (
+    <div className="flex-1 overflow-auto flex items-center justify-center">
+      <div className="text-center py-12 px-6">
+        <div className="text-4xl mb-3">🔮</div>
+        <div className="text-sm font-semibold mb-2">Loading...</div>
+        <div className="text-xs text-text-dim">Fetching recent commits</div>
+      </div>
+    </div>
+  )
+})
+
 export default function Home() {
   const { isInMiniApp } = useFarcasterMiniApp()
   const [showRules, setShowRules] = useState(false)
@@ -239,15 +252,7 @@ export default function Home() {
                 </button>
               </div>
               
-              <div className="flex-1 overflow-auto flex items-center justify-center">
-                <div className="text-center py-12 px-6">
-                  <div className="text-4xl mb-3">🔮</div>
-                  <div className="text-sm font-semibold mb-2">Coming soon</div>
-                  <div className="text-xs text-text-dim">
-                    Recent commit activity will appear here
-                  </div>
-                </div>
-              </div>
+              <RecentCommits />
               
               <div className="px-[18px] py-2.5 border-t border-border text-center text-[10.5px] text-text-dim italic">
                 Words hidden until reveal phase
