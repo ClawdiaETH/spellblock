@@ -27,14 +27,19 @@ export function RecentCommits() {
   const roundId = currentRoundId ? Number(currentRoundId) : 0
 
   useEffect(() => {
-    if (!publicClient || !roundId) return
+    if (!publicClient || !roundId) {
+      console.log('RecentCommits: waiting for client/roundId', { publicClient: !!publicClient, roundId })
+      return
+    }
 
     const fetchCommits = async () => {
       try {
         const currentBlock = await publicClient.getBlockNumber()
         
-        // Fetch last 1000 blocks (~30 minutes on Base)
-        const fromBlock = currentBlock - 1000n
+        // Fetch last 5000 blocks (~3 hours on Base at 2s/block)
+        const fromBlock = currentBlock - 5000n
+        
+        console.log('Fetching commits', { roundId, fromBlock: fromBlock.toString(), currentBlock: currentBlock.toString() })
 
         const logs = await publicClient.getLogs({
           address: CONTRACTS[8453].spellBlockGame as `0x${string}`,
@@ -63,6 +68,7 @@ export function RecentCommits() {
           txHash: log.transactionHash as string
         })).reverse() // Most recent first
 
+        console.log('Found commits:', commitData.length, commitData)
         setCommits(commitData)
       } catch (error) {
         console.error('Error fetching commits:', error)
