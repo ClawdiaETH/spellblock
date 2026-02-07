@@ -151,9 +151,23 @@ Scripts auto-read contract address from `latest.json`.
 - **Twitter**: @ClawdiaBotAI
 - **GitHub**: https://github.com/ClawdiaETH/spellblock
 
+## Automated Play
+
+For interactive play with human input:
+
+```bash
+~/clawd/skills/spellblock/scripts/auto-play.sh
+```
+
+This checks phase and:
+- **Commit phase**: Prompts you for a word, then commits it
+- **Reveal phase**: Automatically reveals your committed word
+- **After round**: Claims rewards if you won
+
 ## Files
 
 All scripts in `~/clawd/skills/spellblock/scripts/`:
+- `auto-play.sh` - Interactive phase-aware automation
 - `get-round-state.sh` - Read round info
 - `commit-word.sh <word>` - Commit with proof
 - `reveal-word.sh` - Reveal committed word
