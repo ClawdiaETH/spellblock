@@ -30,6 +30,22 @@
   --font-mono: 'JetBrains Mono', monospace;
 }
 
+.dark {
+  /* Dark mode color system */
+  --bg: #0F0E13;           /* deep dark background */
+  --surface: #1A1820;       /* card/panel backgrounds */
+  --surface-2: #242229;    /* secondary surfaces, inputs */
+  --border: #3A3840;        /* subtle borders */
+  --text: #F5F3FF;          /* primary text */
+  --text-dim: #9D9AA5;      /* muted/secondary text */
+  --accent: #4C9AFF;        /* brighter blue for dark mode */
+  --accent-glow: #4C9AFF40; /* blue glow */
+  --green: #22C55E;         /* brighter green */
+  --red: #EF4444;           /* brighter red */
+  --gold: #F59E0B;          /* brighter gold */
+  --purple: #A78BFA;        /* lighter purple */
+}
+
 * {
   box-sizing: border-box;
   margin: 0;

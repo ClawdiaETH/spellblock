@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import dynamicImport from 'next/dynamic'
 import { useFarcasterMiniApp } from '@/contexts/FarcasterMiniAppContext'
+import { ThemeToggle } from '@/components/ThemeToggle'
 
 const WalletButton = dynamicImport(() => import('@/components/WalletButton').then(mod => mod.WalletButton), {
   ssr: false,
@@ -86,6 +87,8 @@ export default function Home() {
                   <path d="M22 12A10 10 0 0 0 12 2v10z"/>
                 </svg>
               </button>
+
+              <ThemeToggle />
               
               <WalletButton />
             </div>

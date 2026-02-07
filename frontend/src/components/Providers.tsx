@@ -3,6 +3,7 @@
 import { WagmiProvider } from 'wagmi'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit'
+import { ThemeProvider } from 'next-themes'
 import { getMiniAppConfig } from '@/config/wagmi'
 import { FarcasterMiniAppProvider } from '@/contexts/FarcasterMiniAppContext'
 import { useState, useEffect, useMemo, type ReactNode } from 'react'
@@ -58,26 +59,28 @@ export function Providers({ children }: { children: ReactNode }) {
   }
 
   return (
-    <WagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>
-        <FarcasterMiniAppProvider>
-          {inMiniApp ? (
-            // Mini app environment - no RainbowKit UI
-            children
-          ) : (
-            // Web environment - use RainbowKit
-            <RainbowKitProvider 
-              theme={darkTheme({
-                accentColor: '#a855f7',
-                accentColorForeground: 'white',
-                borderRadius: 'medium',
-              })}
-            >
-              {children}
-            </RainbowKitProvider>
-          )}
-        </FarcasterMiniAppProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
+    <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+      <WagmiProvider config={config}>
+        <QueryClientProvider client={queryClient}>
+          <FarcasterMiniAppProvider>
+            {inMiniApp ? (
+              // Mini app environment - no RainbowKit UI
+              children
+            ) : (
+              // Web environment - use RainbowKit
+              <RainbowKitProvider 
+                theme={darkTheme({
+                  accentColor: '#a855f7',
+                  accentColorForeground: 'white',
+                  borderRadius: 'medium',
+                })}
+              >
+                {children}
+              </RainbowKitProvider>
+            )}
+          </FarcasterMiniAppProvider>
+        </QueryClientProvider>
+      </WagmiProvider>
+    </ThemeProvider>
   )
 }
