@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { usePublicClient, useReadContract } from 'wagmi'
 import { formatEther, Address } from 'viem'
+import { base } from 'viem/chains'
 import { CONTRACTS, SPELLBLOCK_CORE_ABI } from '@/config/contracts'
 
 interface CommitEvent {
@@ -15,7 +16,7 @@ interface CommitEvent {
 export function RecentCommits() {
   const [commits, setCommits] = useState<CommitEvent[]>([])
   const [loading, setLoading] = useState(true)
-  const publicClient = usePublicClient()
+  const publicClient = usePublicClient({ chainId: base.id })
 
   // Get current round ID
   const { data: currentRoundId } = useReadContract({
