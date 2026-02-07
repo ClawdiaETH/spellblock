@@ -45,11 +45,12 @@ export function PhaseBanner({ phase, phaseEnd }: PhaseBannerProps) {
 
   return (
     <div
-      className="px-5 pt-[18px] pb-3.5 border-b"
+      className={`px-5 pt-[18px] pb-3.5 border-b ${
+        isCommit 
+          ? 'bg-blue-50 dark:bg-blue-950/20' 
+          : 'bg-purple-50 dark:bg-purple-950/20'
+      }`}
       style={{
-        background: isCommit
-          ? 'linear-gradient(135deg, #E8F0FE 0%, #F0F4FF 100%)'
-          : 'linear-gradient(135deg, #F0EAFE 0%, #F5F0FF 100%)',
         borderColor: 'var(--border)',
       }}
     >
@@ -60,8 +61,8 @@ export function PhaseBanner({ phase, phaseEnd }: PhaseBannerProps) {
             <span
               className="w-2.5 h-2.5 rounded-full"
               style={{
-                background: isCommit ? '#2B6CB0' : '#7C3AED',
-                boxShadow: isCommit ? '0 2px 8px #2B6CB020' : '0 2px 8px #7C3AED20',
+                background: isCommit ? 'var(--accent)' : 'var(--purple)',
+                boxShadow: isCommit ? '0 2px 8px var(--accent-glow)' : '0 2px 8px rgba(124, 58, 237, 0.2)',
               }}
             />
             {isCommit ? 'Commit phase' : 'Reveal phase'}

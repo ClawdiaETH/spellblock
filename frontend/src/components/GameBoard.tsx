@@ -276,10 +276,7 @@ export function GameBoard() {
           {phase === RoundPhase.Commit && (
             <>
               {/* Hidden constraints warning */}
-              <div className="flex gap-3 items-start p-4 mb-6 rounded-xl border" style={{
-                background: 'linear-gradient(135deg, rgba(124,58,237,0.06), rgba(124,58,237,0.12))',
-                borderColor: 'rgba(124,58,237,0.18)'
-              }}>
+              <div className="flex gap-3 items-start p-4 mb-6 rounded-xl border bg-purple-50 dark:bg-purple-950/20 border-purple-200 dark:border-purple-800/30">
                 <div className="text-2xl flex-shrink-0 mt-0.5">🎭</div>
                 <div>
                   <div className="font-semibold text-sm mb-1">Constraints hidden</div>
@@ -303,10 +300,7 @@ export function GameBoard() {
               )}
 
               {hasCommitted && (
-                <div className="flex gap-3 items-start p-4 rounded-xl border animate-fadeInUp mt-4" style={{
-                  background: 'linear-gradient(135deg, rgba(22,163,74,0.06), rgba(22,163,74,0.14))',
-                  borderColor: 'rgba(22,163,74,0.3)'
-                }}>
+                <div className="flex gap-3 items-start p-4 rounded-xl border animate-fadeInUp mt-4 bg-green-50 dark:bg-green-950/20 border-green-300 dark:border-green-800/40">
                   <div className="w-8 h-8 rounded-full bg-green text-white flex items-center justify-center font-bold text-base flex-shrink-0">
                     ✓
                   </div>
@@ -348,24 +342,17 @@ export function GameBoard() {
                 </div>
 
                 {/* Ruler */}
-                <div className="p-4 rounded-xl border" style={{
-                  borderColor: '#D9770640',
-                  background: 'linear-gradient(160deg, #D9770606, #D9770614)'
-                }}>
+                <div className="p-4 rounded-xl border bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800/30">
                   <div className="flex items-center gap-2 mb-2.5">
                     <span className="text-2xl">📏</span>
-                    <span className="text-base font-bold text-gold">Ruler</span>
+                    <span className="text-base font-bold" style={{ color: 'var(--gold)' }}>Ruler</span>
                   </div>
                   <div className="flex flex-wrap gap-1.5">
                     {[5, 8, 11].map((len) => (
                       <span
                         key={len}
-                        className="text-[11px] font-mono font-semibold px-2 py-0.5 rounded border"
-                        style={{
-                          background: '#D9770618',
-                          color: '#D97706',
-                          borderColor: '#D9770630'
-                        }}
+                        className="text-[11px] font-mono font-semibold px-2 py-0.5 rounded border bg-amber-100 dark:bg-amber-900/30 border-amber-300 dark:border-amber-700/40"
+                        style={{ color: 'var(--gold)' }}
                       >
                         {len} letters
                       </span>
