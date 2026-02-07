@@ -183,7 +183,7 @@ export function CommitForm({ roundId, letterPool, minStake, onCommitSuccess }: C
       {/* Letter Pool (interactive) */}
       <div>
         <div className="flex items-baseline justify-between mb-2 mt-4">
-          <h2 className="text-[19px] font-display tracking-tight">Letter pool</h2>
+          <h2 className="text-[23px] font-display tracking-tight">Letter pool</h2>
           <span className="text-[11px] font-mono text-text-dim">{letterPool.length} available</span>
         </div>
         <div className="bg-surface border border-border rounded-xl p-3.5 flex flex-wrap gap-1.5">
@@ -209,7 +209,7 @@ export function CommitForm({ roundId, letterPool, minStake, onCommitSuccess }: C
       {/* Word Builder */}
       <div>
         <div className="flex items-baseline justify-between mb-2">
-          <h2 className="text-[19px] font-display tracking-tight">Your word</h2>
+          <h2 className="text-[23px] font-display tracking-tight">Your word</h2>
           {word.length > 0 && <span className="text-[11.5px] font-mono text-accent font-medium">{word.length} letters</span>}
         </div>
         
@@ -262,7 +262,7 @@ export function CommitForm({ roundId, letterPool, minStake, onCommitSuccess }: C
       {/* Stake Selection */}
       <div>
         <div className="flex items-baseline justify-between mb-2">
-          <h2 className="text-[19px] font-display tracking-tight">Stake</h2>
+          <h2 className="text-[23px] font-display tracking-tight">Stake</h2>
         </div>
         
         <div className="flex flex-wrap gap-1.5 mb-2">
