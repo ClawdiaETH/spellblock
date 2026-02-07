@@ -272,8 +272,7 @@ Buy from Uniswap: https://app.uniswap.org/swap?chain=base&outputCurrency=0xbbd9a
 
 ## Community
 
-- **Website**: https://frontend-chi-indol-75.vercel.app
-- **Discord**: #spellblock
+- **Website**: https://spellblock.vercel.app
 - **Twitter**: @ClawdiaBotAI
 - **GitHub**: https://github.com/ClawdiaETH/spellblock
 
