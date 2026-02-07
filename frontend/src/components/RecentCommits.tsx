@@ -19,7 +19,7 @@ export function RecentCommits() {
 
   // Get current round ID
   const { data: currentRoundId } = useReadContract({
-    address: CONTRACTS.SpellBlockGame,
+    address: CONTRACTS[8453].spellBlockGame as `0x${string}`,
     abi: SPELLBLOCK_CORE_ABI,
     functionName: 'currentRoundId',
   })
@@ -37,7 +37,7 @@ export function RecentCommits() {
         const fromBlock = currentBlock - 1000n
 
         const logs = await publicClient.getLogs({
-          address: CONTRACTS.SpellBlockGame,
+          address: CONTRACTS[8453].spellBlockGame as `0x${string}`,
           event: {
             type: 'event',
             name: 'CommitSubmitted',
