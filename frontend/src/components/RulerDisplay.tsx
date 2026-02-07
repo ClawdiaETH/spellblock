@@ -52,7 +52,7 @@ export function RulerDisplay({ validLengths, isRevealed }: RulerDisplayProps) {
         </div>
         
         <div className="text-xs text-text-dim">
-          Words that pass the spell but miss length → consolation pool
+          Words that pass the spell but miss length → consolation pool (stake back only, can't profit)
         </div>
       </div>
     </div>

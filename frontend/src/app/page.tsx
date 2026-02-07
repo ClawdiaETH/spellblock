@@ -273,8 +273,10 @@ export default function Home() {
                       <span className="font-mono font-semibold">97%</span>
                     </div>
                     <div className="ml-4 space-y-1 text-xs text-text-dim">
-                      <div>→ 90% winners (spell + ruler)</div>
-                      <div>→ 10% consolation (spell only)</div>
+                      <div>→ 90% winners (passed BOTH spell + ruler)</div>
+                      <div className="ml-3 italic opacity-80 mt-0.5">Split by final word score (higher scores win more)</div>
+                      <div className="mt-1.5">→ 10% consolation (passed spell, failed ruler)</div>
+                      <div className="ml-3 italic opacity-80 mt-0.5">Capped at your stake — you can't profit, only recover</div>
                     </div>
                     <div className="border-t border-border pt-2 mt-2">
                       <div className="flex justify-between">
