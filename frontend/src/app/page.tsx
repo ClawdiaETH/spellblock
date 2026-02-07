@@ -150,7 +150,7 @@ export default function Home() {
                   {
                     n: '4',
                     title: 'Reveal & settle',
-                    desc: 'Reveal your word. If it passes both spell and ruler, you win a share of the pot. If not, your stake burns forever.'
+                    desc: 'Reveal your word. Pass BOTH constraints = winner pool (90%). Pass spell but fail ruler = consolation (10%, recover stake only). Fail spell = stake joins the pot for winners.'
                   }
                 ].map((step) => (
                   <div key={step.n} className="flex gap-3">
