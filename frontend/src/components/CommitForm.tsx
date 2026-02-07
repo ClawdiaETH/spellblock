@@ -101,22 +101,18 @@ export function CommitForm({ roundId, letterPool, minStake, onCommitSuccess }: C
     }
   }, [commitSuccess, roundId, word, salt, stake, address, onCommitSuccess])
 
-  // Track used letter indices
+  // Track letter usage count (for visual feedback, but allow reuse)
   useEffect(() => {
-    const indices = new Set<number>()
-    const poolArray = letterPool.split('').map((l, i) => ({ letter: l, index: i, used: false }))
+    const counts = new Map<string, number>()
     for (const ch of word.toUpperCase()) {
-      const found = poolArray.find((p) => p.letter === ch && !p.used)
-      if (found) {
-        found.used = true
-        indices.add(found.index)
-      }
+      counts.set(ch, (counts.get(ch) || 0) + 1)
     }
-    setUsedIndices(indices)
+    // No longer prevent reuse - letters can be clicked multiple times
+    setUsedIndices(new Set()) // Clear restrictions
   }, [word, letterPool])
 
   const addLetter = (letter: string, idx: number) => {
-    if (usedIndices.has(idx)) return
+    // Allow any letter to be clicked multiple times
     setWord((w) => w + letter)
   }
 
@@ -192,13 +188,7 @@ export function CommitForm({ roundId, letterPool, minStake, onCommitSuccess }: C
               key={i}
               type="button"
               onClick={() => addLetter(letter, i)}
-              disabled={usedIndices.has(i)}
-              className="letter-tile transition-all"
-              style={{
-                opacity: usedIndices.has(i) ? 0.2 : 1,
-                transform: usedIndices.has(i) ? 'scale(0.88)' : 'scale(1)',
-                cursor: usedIndices.has(i) ? 'default' : 'pointer',
-              }}
+              className="letter-tile transition-all hover:scale-105"
             >
               {letter}
             </button>
