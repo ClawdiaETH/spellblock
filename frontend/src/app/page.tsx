@@ -132,7 +132,7 @@ export default function Home() {
                   {
                     n: '3',
                     title: 'The double reveal',
-                    desc: 'At midnight UTC, TWO hidden constraints are revealed. Your word must pass BOTH to win:'
+                    desc: 'At 08:00 UTC / 03:00 AM ET, TWO hidden constraints are revealed. Your word must pass BOTH to win:'
                   },
                   {
                     n: '4',

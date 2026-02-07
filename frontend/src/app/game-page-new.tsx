@@ -115,7 +115,7 @@ export default function GamePage() {
                   {
                     n: '3',
                     title: 'The double reveal',
-                    desc: 'At midnight UTC, two hidden constraints appear:'
+                    desc: 'At 08:00 UTC / 03:00 AM ET, two hidden constraints appear:'
                   },
                   {
                     n: '4',
