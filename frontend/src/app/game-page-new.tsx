@@ -164,9 +164,9 @@ export default function GamePage() {
                 <div className="bg-surface-2 border border-border rounded-lg p-4 mt-6">
                   <div className="font-semibold text-sm mb-3">Daily schedule</div>
                   <div className="space-y-2 text-sm">
-                    <div><span className="font-mono font-semibold">16:00 UTC / 11:00 ET</span> Round opens · Letters revealed</div>
-                    <div><span className="font-mono font-semibold">08:00 UTC / 03:00 ET</span> Commits close · Spell + Ruler revealed</div>
-                    <div><span className="font-mono font-semibold">15:45 UTC / 10:45 ET</span> Reveals close · Winners paid · Burns executed</div>
+                    <div><span className="font-mono font-semibold">16:00 UTC / 11:00 AM ET</span> Round opens · Letters revealed</div>
+                    <div><span className="font-mono font-semibold">08:00 UTC / 03:00 AM ET</span> Commits close · Spell + Ruler revealed</div>
+                    <div><span className="font-mono font-semibold">15:45 UTC / 10:45 AM ET</span> Reveals close · Winners paid · Burns executed</div>
                   </div>
                 </div>
               </div>

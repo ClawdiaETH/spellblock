@@ -182,15 +182,15 @@ export default function Home() {
                   <div className="font-semibold text-[12.5px] mb-1.5">Daily schedule</div>
                   <div className="space-y-0.5 text-[12.5px] text-text-dim leading-relaxed">
                     <div className="py-0.5">
-                      <span className="font-mono font-semibold text-text mr-1.5">16:00 UTC / 11:00 ET</span>
+                      <span className="font-mono font-semibold text-text mr-1.5">16:00 UTC / 11:00 AM ET</span>
                       Round opens · Letters revealed
                     </div>
                     <div className="py-0.5">
-                      <span className="font-mono font-semibold text-text mr-1.5">08:00 UTC / 03:00 ET</span>
+                      <span className="font-mono font-semibold text-text mr-1.5">08:00 UTC / 03:00 AM ET</span>
                       Commits close · Spell + Ruler revealed
                     </div>
                     <div className="py-0.5">
-                      <span className="font-mono font-semibold text-text mr-1.5">15:45 UTC / 10:45 ET</span>
+                      <span className="font-mono font-semibold text-text mr-1.5">15:45 UTC / 10:45 AM ET</span>
                       Reveals close · Winners paid · Burns executed
                     </div>
                   </div>

@@ -91,11 +91,11 @@ function PhaseBanner({ phase, deadline, season }: { phase: RoundPhase; deadline:
 
         {/* Phase track */}
         <div className="flex items-center">
-          <PhaseStep label="Open" time="16:00 UTC / 11:00 ET" active={phase >= RoundPhase.Commit} color={phase >= RoundPhase.Commit ? '#2B6CB0' : '#D8D5CC'} />
+          <PhaseStep label="Open" time="16:00 UTC / 11:00 AM ET" active={phase >= RoundPhase.Commit} color={phase >= RoundPhase.Commit ? '#2B6CB0' : '#D8D5CC'} />
           <div className="flex-[2] h-0.5 mx-1" style={{ background: phase >= RoundPhase.Reveal ? '#2B6CB0' : '#D8D5CC' }} />
-          <PhaseStep label="Reveal" time="08:00 UTC / 03:00 ET" active={phase >= RoundPhase.Reveal} color={phase >= RoundPhase.Reveal ? '#7C3AED' : '#D8D5CC'} />
+          <PhaseStep label="Reveal" time="08:00 UTC / 03:00 AM ET" active={phase >= RoundPhase.Reveal} color={phase >= RoundPhase.Reveal ? '#7C3AED' : '#D8D5CC'} />
           <div className="flex-1 h-0.5 mx-1" style={{ background: phase >= RoundPhase.Finalized ? '#7C3AED' : '#D8D5CC' }} />
-          <PhaseStep label="Settle" time="15:45 UTC / 10:45 ET" active={phase >= RoundPhase.Finalized} color={phase >= RoundPhase.Finalized ? '#16A34A' : '#D8D5CC'} />
+          <PhaseStep label="Settle" time="15:45 UTC / 10:45 AM ET" active={phase >= RoundPhase.Finalized} color={phase >= RoundPhase.Finalized ? '#16A34A' : '#D8D5CC'} />
         </div>
       </div>
     </div>
@@ -235,14 +235,14 @@ export function GameBoard() {
         <div className="bg-surface border border-border rounded-2xl p-8 text-center">
           <h2 className="text-3xl font-display mb-4">🔮 Preparing next ritual</h2>
           <p className="text-text-dim text-lg mb-6">
-            The next round of SpellBlock will begin at 16:00 UTC / 11:00 ET daily!
+            The next round of SpellBlock will begin at 16:00 UTC / 11:00 AM ET daily!
           </p>
           <div className="bg-surface-2 border border-border rounded-lg p-4 text-sm">
             <div className="font-semibold mb-2">Daily schedule</div>
             <div className="text-text-dim space-y-1">
-              <div>• Opens: 16:00 UTC / 11:00 ET</div>
-              <div>• Commits close: 08:00 UTC / 03:00 ET</div>
-              <div>• Reveals close: 15:45 UTC / 10:45 ET</div>
+              <div>• Opens: 16:00 UTC / 11:00 AM ET</div>
+              <div>• Commits close: 08:00 UTC / 03:00 AM ET</div>
+              <div>• Reveals close: 15:45 UTC / 10:45 AM ET</div>
             </div>
           </div>
         </div>
@@ -284,7 +284,7 @@ export function GameBoard() {
                 <div>
                   <div className="font-semibold text-sm mb-1">Constraints hidden</div>
                   <div className="text-xs text-text-dim leading-relaxed">
-                    A spell (Veto, Anchor, Seal, or Gem) and three valid word lengths will be revealed at 08:00 UTC / 03:00 ET. Hedge wisely.
+                    A spell (Veto, Anchor, Seal, or Gem) and three valid word lengths will be revealed at 08:00 UTC / 03:00 AM ET. Hedge wisely.
                   </div>
                 </div>
               </div>
@@ -331,7 +331,7 @@ export function GameBoard() {
                   <div>
                     <div className="font-bold text-base mb-1">Committed</div>
                     <div className="text-xs text-text-dim leading-relaxed">
-                      Your word is locked with {((Number(commitment?.stake || 0n) / 1e18) / 1000000).toFixed(1)}M $CLAWDIA. Constraints reveal at 08:00 UTC / 03:00 ET.
+                      Your word is locked with {((Number(commitment?.stake || 0n) / 1e18) / 1000000).toFixed(1)}M $CLAWDIA. Constraints reveal at 08:00 UTC / 03:00 AM ET.
                     </div>
                   </div>
                 </div>

@@ -174,7 +174,7 @@ export function RevealForm({ roundId, spellId, spellParam, onRevealSuccess }: Re
             </div>
             <div className="text-xs text-text-dim leading-relaxed">
               {isWinner
-                ? 'Your word survived both constraints. Winnings distribute at 15:45 UTC / 10:45 ET.'
+                ? 'Your word survived both constraints. Winnings distribute at 15:45 UTC / 10:45 AM ET.'
                 : 'Your word failed. Your stake has been permanently burned.'}
             </div>
           </div>
