@@ -289,24 +289,6 @@ export function GameBoard() {
                 </div>
               </div>
 
-              {/* Letter Pool */}
-              <div className="mb-5">
-                <div className="flex items-baseline justify-between mb-2 mt-4">
-                  <h2 className="text-[19px] font-display tracking-tight">Letter pool</h2>
-                  <span className="text-[11px] font-mono text-text-dim">{letterPool.length} available</span>
-                </div>
-                <div className="bg-surface border border-border rounded-xl p-3.5 flex flex-wrap gap-1.5">
-                  {letterPool.split('').map((letter, i) => (
-                    <div
-                      key={i}
-                      className="letter-tile"
-                    >
-                      {letter}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
               {/* Commit Form */}
               {!hasCommitted && currentRoundId && (
                 <CommitForm
