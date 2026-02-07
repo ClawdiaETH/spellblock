@@ -90,11 +90,11 @@ function PhaseBanner({ phase, deadline, season }: { phase: RoundPhase; deadline:
 
         {/* Phase track */}
         <div className="flex items-center">
-          <PhaseStep label="Open" time="16:00 UTC / 11:00 AM ET" active={phase >= RoundPhase.Commit} color={phase >= RoundPhase.Commit ? '#2B6CB0' : '#D8D5CC'} />
-          <div className="flex-[2] h-0.5 mx-1" style={{ background: phase >= RoundPhase.Reveal ? '#2B6CB0' : '#D8D5CC' }} />
-          <PhaseStep label="Reveal" time="08:00 UTC / 03:00 AM ET" active={phase >= RoundPhase.Reveal} color={phase >= RoundPhase.Reveal ? '#7C3AED' : '#D8D5CC'} />
-          <div className="flex-1 h-0.5 mx-1" style={{ background: phase >= RoundPhase.Finalized ? '#7C3AED' : '#D8D5CC' }} />
-          <PhaseStep label="Settle" time="15:45 UTC / 10:45 AM ET" active={phase >= RoundPhase.Finalized} color={phase >= RoundPhase.Finalized ? '#16A34A' : '#D8D5CC'} />
+          <PhaseStep label="Open" time="16:00 UTC / 11:00 AM ET" active={phase >= RoundPhase.Commit} color={phase >= RoundPhase.Commit ? 'var(--accent)' : 'var(--border)'} />
+          <div className="flex-[2] h-0.5 mx-1" style={{ background: phase >= RoundPhase.Reveal ? 'var(--accent)' : 'var(--border)' }} />
+          <PhaseStep label="Reveal" time="08:00 UTC / 03:00 AM ET" active={phase >= RoundPhase.Reveal} color={phase >= RoundPhase.Reveal ? 'var(--purple)' : 'var(--border)'} />
+          <div className="flex-1 h-0.5 mx-1" style={{ background: phase >= RoundPhase.Finalized ? 'var(--purple)' : 'var(--border)' }} />
+          <PhaseStep label="Settle" time="15:45 UTC / 10:45 AM ET" active={phase >= RoundPhase.Finalized} color={phase >= RoundPhase.Finalized ? 'var(--green)' : 'var(--border)'} />
         </div>
       </div>
     </div>
@@ -115,7 +115,7 @@ function PhaseStep({ label, time, active, color }: { label: string; time: string
       <span className={`text-[9.5px] font-semibold uppercase tracking-wider ${active ? 'text-text' : 'text-text-dim'}`}>
         {label}
       </span>
-      <span className="text-[9.5px] font-mono text-text-dim opacity-50">{time}</span>
+      <span className="text-[9.5px] font-mono text-text-dim dark:text-text/60">{time}</span>
     </div>
   )
 }
