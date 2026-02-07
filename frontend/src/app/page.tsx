@@ -56,13 +56,13 @@ export default function Home() {
               </div>
               <RoundBadge />
               <a
-                href="https://github.com/ClawdiaETH/spellblock/blob/main/AGENT_SKILL.md"
+                href="/skill.md"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="ml-1 px-2.5 py-1.5 text-[11px] font-semibold bg-surface-2 hover:bg-accent/10 border border-border hover:border-accent rounded-lg text-text-dim hover:text-accent transition-all"
+                className="ml-1 px-2.5 py-1.5 text-[11px] font-mono font-semibold bg-surface-2 hover:bg-accent/10 border border-border hover:border-accent rounded-lg text-text-dim hover:text-accent transition-all"
                 title="Agent automation skill"
               >
-                🤖 For Agents
+                skill.md
               </a>
             </div>
             
@@ -386,13 +386,13 @@ export default function Home() {
                   💻 View source
                 </a>
                 <a 
-                  href="https://github.com/ClawdiaETH/spellblock/blob/main/AGENT_SKILL.md" 
+                  href="/skill.md" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-text-dim hover:text-accent transition-colors font-semibold"
+                  className="text-text-dim hover:text-accent transition-colors font-mono font-semibold"
                   title="Enable your AI agent to play SpellBlock"
                 >
-                  🤖 Agent Skill
+                  skill.md
                 </a>
               </div>
               

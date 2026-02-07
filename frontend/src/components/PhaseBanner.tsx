@@ -146,10 +146,10 @@ function PhaseStep({ label, time, timeET, active, color }: PhaseStepProps) {
       >
         {label}
       </span>
-      <span className="text-[9.5px] font-mono text-text-dim opacity-50">
+      <span className="text-[9.5px] font-mono text-text-dim dark:text-text/60">
         {time}
       </span>
-      <span className="text-[8.5px] font-mono text-text-dim opacity-40">
+      <span className="text-[8.5px] font-mono text-text-dim dark:text-text/50">
         {timeET}
       </span>
     </div>
