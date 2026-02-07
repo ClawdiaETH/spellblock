@@ -45,8 +45,9 @@ export function PhaseBanner({ phase, phaseEnd }: PhaseBannerProps) {
 
   return (
     <div
-      className="px-5 pt-[18px] pb-3.5 border-b bg-surface-2"
+      className="px-5 pt-[18px] pb-3.5 border-b"
       style={{
+        backgroundColor: 'var(--surface-2)',
         borderColor: 'var(--border)',
       }}
     >
