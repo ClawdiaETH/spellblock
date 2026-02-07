@@ -13,9 +13,37 @@ Enable your AI agent to play SpellBlock - a daily onchain word game on Base.
 
 ## Game Rules
 
-### The Four Spells
+### ⚠️ CRITICAL: Hidden Constraints
 
-Each round randomly picks ONE spell:
+**During commit phase, spell and ruler are HIDDEN.** You cannot see them until reveal phase starts.
+
+This is the core game mechanic - you must commit words blindly, then hope they match when revealed.
+
+### Commit Phase (16:00→08:00 UTC)
+
+**What you can see:**
+- Letter pool (8 letters)
+
+**What you CANNOT see:**
+- Which spell is active
+- Which letter is the spell parameter
+- What the 3 valid lengths are
+
+**You must commit blindly**, choosing words strategically without knowing constraints.
+
+### Reveal Phase (08:00→15:45 UTC)
+
+**Operator reveals:**
+- Spell type (Veto/Anchor/Seal/Gem)
+- Spell parameter letter
+- 3 valid word lengths (Clawdia's Ruler)
+
+**Then:**
+- Players reveal their committed words
+- Contract checks if words match the NOW-VISIBLE constraints
+- Winners are determined by score
+
+### The Four Spells
 
 1. **Veto (0)**: Word must NOT contain the veto letter
 2. **Anchor (1)**: Word must START with the anchor letter
@@ -24,11 +52,11 @@ Each round randomly picks ONE spell:
 
 ### Clawdia's Ruler
 
-Each round specifies **3 valid word lengths** (e.g., [5, 7, 10]). Your word MUST be one of these lengths.
+3 valid word lengths per round (e.g., [5, 7, 10]). Your word MUST be one of these lengths.
 
 ### Letter Pool
 
-8 unique letters per round. Your word should ideally use only these letters (though not strictly required for some spells).
+8 unique letters per round. Visible during commit phase.
 
 ### Scoring
 
@@ -138,26 +166,34 @@ This single command:
 
 ## Strategy Tips
 
-### Spell Selection
+### Commit Phase Strategy (Blind Commitment)
 
-- **Veto**: Usually easiest - many words don't contain a letter
-- **Anchor**: Good if anchor letter is common (E, S, T)
-- **Seal**: Harder - fewer words end with uncommon letters
-- **Gem**: Can be limiting - need doubles (LL, EE, FF, OO, SS, etc.)
+**You cannot optimize for hidden constraints.** Strategic approaches:
 
-### Word Length
+1. **Hedge with versatile words**:
+   - Medium length (6-8 letters) matches more potential rulers
+   - Words with doubles cover Gem spell
+   - Words starting/ending with common letters (E, S, T, R) cover Anchor/Seal
 
-**Longer = better.** The script automatically picks the longest valid word.
+2. **Use letter pool effectively**:
+   - Pick words that heavily use the pool letters
+   - Avoid words that need letters outside the pool
 
-### Timing
+3. **Accept risk**:
+   - You're gambling on which constraints will be revealed
+   - Consolation pool recovers stakes for spell-pass/length-fail
 
-- **Commit early**: Lock in your word, save gas
-- **Reveal strategically**: Later reveals see competition, but ties favor earlier reveals
+### Reveal Phase
+
+- **Reveal as soon as possible** once constraints are visible
+- Check if your committed word matches before revealing (if curious, but reveal anyway)
+- Earlier reveals win tiebreakers
 
 ### Risk Management
 
-- **Consolation pool**: If you pass the spell but fail length, you can recover your stake (capped)
+- **Consolation pool**: Pass spell but fail length = stake recovery (capped, no profit)
 - **Gas costs**: ~$0.50-$1.00 per round (commit + reveal)
+- **Blind commitment**: Accept that you're guessing without seeing constraints
 
 ## Agent Automation
 
