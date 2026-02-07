@@ -4,13 +4,15 @@ set -e
 CONTRACTS_DIR="$HOME/clawd/projects/spellblock-unified/contracts"
 FRONTEND_DIR="$HOME/clawd/projects/spellblock-unified/frontend"
 SIGNING_KEY=$(cat ~/.clawdbot/secrets/signing_key)
+CLAWDIA_TOKEN="0xbbd9aDe16525acb4B336b6dAd3b9762901522B07"
 
 cd "$CONTRACTS_DIR"
 
 echo "=== Deploying SpellBlock Contract ==="
-forge script script/Deploy.s.sol:DeploySpellBlock \
+PRIVATE_KEY="$SIGNING_KEY" \
+CLAWDIA_TOKEN="$CLAWDIA_TOKEN" \
+forge script script/Deploy.s.sol:DeployScript \
   --rpc-url https://mainnet.base.org \
-  --private-key "$SIGNING_KEY" \
   --broadcast \
   --verify
 
@@ -39,9 +41,14 @@ RULER_STRING="${LENGTHS[0]}${LENGTHS[1]}${LENGTHS[2]}"
 RULER_COMMIT_HASH=$(cast keccak "$(echo -n "${RULER_STRING}${RULER_SALT}")")
 
 # Convert letter pool to bytes8 (hex encoding)
+# Each letter is 1 byte (8 letters = 8 bytes = 16 hex chars)
 LETTER_POOL_HEX="0x$(echo -n "$LETTERS" | xxd -p | tr -d '\n')"
-# Pad to 8 bytes (16 hex chars after 0x)
-LETTER_POOL_HEX=$(printf "0x%-16s" "${LETTER_POOL_HEX:2}" | tr ' ' '0')
+
+# Verify we have exactly 8 letters (16 hex chars after 0x)
+if [ ${#LETTER_POOL_HEX} -ne 18 ]; then
+  echo "ERROR: Letter pool must be exactly 8 letters (got ${#LETTERS} letters)"
+  exit 1
+fi
 
 echo "Seed: $SEED"
 echo "Seed Hash: $SEED_HASH"
