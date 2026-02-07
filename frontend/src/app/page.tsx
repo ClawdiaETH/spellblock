@@ -55,6 +55,15 @@ export default function Home() {
                 </p>
               </div>
               <RoundBadge />
+              <a
+                href="https://github.com/ClawdiaETH/spellblock/blob/main/AGENT_SKILL.md"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ml-1 px-2.5 py-1.5 text-[11px] font-semibold bg-surface-2 hover:bg-accent/10 border border-border hover:border-accent rounded-lg text-text-dim hover:text-accent transition-all"
+                title="Agent automation skill"
+              >
+                🤖 For Agents
+              </a>
             </div>
             
             {/* Right side actions */}
@@ -351,7 +360,7 @@ export default function Home() {
                 {' '}on Base
               </p>
               
-              <div className="flex justify-center space-x-6 text-sm">
+              <div className="flex justify-center flex-wrap gap-x-6 gap-y-2 text-sm">
                 <a 
                   href="https://basescan.org/token/0xbbd9aDe16525acb4B336b6dAd3b9762901522B07" 
                   target="_blank" 
@@ -369,12 +378,21 @@ export default function Home() {
                   🐚 Follow updates
                 </a>
                 <a 
-                  href="https://github.com/ClawdiaETH/spellblock-frontend" 
+                  href="https://github.com/ClawdiaETH/spellblock" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-text-dim hover:text-accent transition-colors"
                 >
                   💻 View source
+                </a>
+                <a 
+                  href="https://github.com/ClawdiaETH/spellblock/blob/main/AGENT_SKILL.md" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-text-dim hover:text-accent transition-colors font-semibold"
+                  title="Enable your AI agent to play SpellBlock"
+                >
+                  🤖 Agent Skill
                 </a>
               </div>
               

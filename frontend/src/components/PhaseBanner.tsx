@@ -57,12 +57,12 @@ export function PhaseBanner({ phase, phaseEnd }: PhaseBannerProps) {
       {/* Phase info + timer */}
       <div className="flex justify-between items-start mb-4 flex-wrap gap-3">
         <div>
-          <div className="flex items-center gap-2 text-[17px] font-semibold mb-0.5">
+          <div className="flex items-center gap-2 text-[17px] font-semibold mb-0.5 text-text">
             <span
               className="w-2.5 h-2.5 rounded-full"
               style={{
                 background: isCommit ? 'var(--accent)' : 'var(--purple)',
-                boxShadow: isCommit ? '0 2px 8px var(--accent-glow)' : '0 2px 8px rgba(124, 58, 237, 0.2)',
+                boxShadow: isCommit ? '0 2px 8px var(--accent-glow)' : '0 2px 8px var(--purple-glow, rgba(124, 58, 237, 0.2))',
               }}
             />
             {isCommit ? 'Commit phase' : 'Reveal phase'}
@@ -78,7 +78,7 @@ export function PhaseBanner({ phase, phaseEnd }: PhaseBannerProps) {
           <div className="text-[10px] text-text-dim uppercase tracking-wider mb-0.5">
             Phase ends in
           </div>
-          <div className="font-mono text-[26px] font-semibold tracking-wide">
+          <div className="font-mono text-[26px] font-semibold tracking-wide text-text">
             {timeLeft}
           </div>
         </div>
@@ -91,18 +91,18 @@ export function PhaseBanner({ phase, phaseEnd }: PhaseBannerProps) {
           time="16:00 UTC" 
           timeET="11:00 AM ET"
           active={true} 
-          color="#2B6CB0" 
+          color="var(--accent)" 
         />
         <div
           className="flex-[2] h-0.5 rounded -mt-[18px]"
-          style={{ background: isCommit ? 'var(--border)' : '#2B6CB0' }}
+          style={{ background: isCommit ? 'var(--border)' : 'var(--accent)' }}
         />
         <PhaseStep 
           label="Reveal" 
           time="08:00 UTC" 
           timeET="03:00 AM ET"
           active={!isCommit} 
-          color={isCommit ? 'var(--border)' : '#7C3AED'} 
+          color={isCommit ? 'var(--border)' : 'var(--purple)'} 
         />
         <div
           className="flex-1 h-0.5 rounded -mt-[18px]"
@@ -140,15 +140,16 @@ function PhaseStep({ label, time, timeET, active, color }: PhaseStepProps) {
         }}
       />
       <span
-        className="text-[9.5px] font-semibold uppercase tracking-wide"
-        style={{ color: active ? 'var(--text)' : 'var(--text-dim)' }}
+        className={`text-[9.5px] font-semibold uppercase tracking-wide ${
+          active ? 'text-text' : 'text-text-dim'
+        }`}
       >
         {label}
       </span>
-      <span className="text-[9.5px] font-mono opacity-50" style={{ color: 'var(--text-dim)' }}>
+      <span className="text-[9.5px] font-mono text-text-dim opacity-50">
         {time}
       </span>
-      <span className="text-[8.5px] font-mono opacity-40" style={{ color: 'var(--text-dim)' }}>
+      <span className="text-[8.5px] font-mono text-text-dim opacity-40">
         {timeET}
       </span>
     </div>

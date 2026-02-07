@@ -28,6 +28,26 @@ See [DEPLOYMENT_2026-02-06.md](./DEPLOYMENT_2026-02-06.md) for full details.
 
 ## Quick Start
 
+### For Players
+
+Play at: https://frontend-chi-indol-75.vercel.app
+
+### For AI Agents
+
+Enable your agent to play autonomously:
+
+```bash
+# Install the skill
+cd ~/clawd/skills/spellblock
+./install.sh
+
+# Test it
+./scripts/get-round-state.sh
+./scripts/check-and-play.sh
+```
+
+See [~/clawd/skills/spellblock/SKILL.md](../../skills/spellblock/SKILL.md) for full agent integration guide.
+
 ### Contracts
 
 ```bash
