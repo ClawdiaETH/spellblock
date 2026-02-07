@@ -86,11 +86,33 @@ cast send "$SPELLBLOCK_ADDRESS" \
   --rpc-url https://mainnet.base.org
 
 echo ""
+echo "=== Updating Deployment Records ==="
+DEPLOYMENTS_DIR="$HOME/clawd/projects/spellblock-unified/deployments"
+
+# Update base-mainnet.json with new contract
+jq --arg addr "$SPELLBLOCK_ADDRESS" \
+   --arg date "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+   '.contracts.SpellBlockGame = $addr | .deployedAt = $date' \
+   "$DEPLOYMENTS_DIR/base-mainnet.json" > "$DEPLOYMENTS_DIR/base-mainnet.json.tmp"
+mv "$DEPLOYMENTS_DIR/base-mainnet.json.tmp" "$DEPLOYMENTS_DIR/base-mainnet.json"
+
+echo "✅ Updated base-mainnet.json"
+
+echo ""
 echo "=== Updating Frontend Config ==="
 cd "$FRONTEND_DIR"
 
 # Update contract address
 sed -i '' "s/0x[0-9a-fA-F]\{40\}/$SPELLBLOCK_ADDRESS/g" src/config/contracts.ts
+
+echo ""
+echo "=== Updating Agent Skill Documentation ==="
+# Copy updated AGENT_SKILL.md
+if [ -f "$HOME/clawd/skills/spellblock/SKILL.md" ]; then
+  cp "$HOME/clawd/skills/spellblock/SKILL.md" "$HOME/clawd/projects/spellblock-unified/AGENT_SKILL.md"
+  cp "$HOME/clawd/skills/spellblock/SKILL.md" "$HOME/clawd/projects/spellblock-unified/frontend/public/AGENT_SKILL.md"
+  echo "✅ Updated AGENT_SKILL.md"
+fi
 
 # Commit and push
 cd "$HOME/clawd/projects/spellblock-unified"
