@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800">
+  <defs>
+    <radialGradient id="splashBgGradient" cx="0.5" cy="0.5" r="0.8">
+      <stop offset="0%" style="stop-color:#f5f0ec;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e7ddd1;stop-opacity:1" />
+    </radialGradient>
+    <radialGradient id="crystalGradient" cx="0.3" cy="0.3" r="0.8">
+      <stop offset="0%" style="stop-color:#a855f7;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#8b5cf6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+    </radialGradient>
+    <linearGradient id="titleGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#dc8200;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#a855f7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#dc8200;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="800" fill="url(#splashBgGradient)"/>
+  
+  <!-- Main crystal ball with animation -->
+  <circle cx="400" cy="350" r="120" fill="url(#crystalGradient)" opacity="0.9">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="400" cy="350" r="115" fill="none" stroke="#dc8200" stroke-width="3" opacity="0.8">
+    <animate attributeName="opacity" values="0.5;0.9;0.5" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Sparkles with staggered animation -->
+  <circle cx="280" cy="250" r="10" fill="#dc8200" opacity="0.8">
+    <animate attributeName="opacity" values="0;1;0" dur="3s" repeatCount="indefinite" begin="0s"/>
+    <animate attributeName="r" values="8;12;8" dur="3s" repeatCount="indefinite" begin="0s"/>
+  </circle>
+  <circle cx="520" cy="280" r="8" fill="#dc8200" opacity="0.7">
+    <animate attributeName="opacity" values="0;1;0" dur="3s" repeatCount="indefinite" begin="0.5s"/>
+    <animate attributeName="r" values="6;10;6" dur="3s" repeatCount="indefinite" begin="0.5s"/>
+  </circle>
+  <circle cx="250" cy="450" r="9" fill="#dc8200" opacity="0.9">
+    <animate attributeName="opacity" values="0;1;0" dur="3s" repeatCount="indefinite" begin="1s"/>
+    <animate attributeName="r" values="7;11;7" dur="3s" repeatCount="indefinite" begin="1s"/>
+  </circle>
+  <circle cx="550" cy="420" r="7" fill="#dc8200" opacity="0.6">
+    <animate attributeName="opacity" values="0;1;0" dur="3s" repeatCount="indefinite" begin="1.5s"/>
+    <animate attributeName="r" values="5;9;5" dur="3s" repeatCount="indefinite" begin="1.5s"/>
+  </circle>
+  
+  <!-- Title with shimmer animation -->
+  <text x="400" y="550" font-family="sans-serif" font-size="64" font-weight="900" text-anchor="middle" fill="url(#titleGradient)">
+    SpellBlock
+    <animate attributeName="opacity" values="0.8;1;0.8" dur="2s" repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Loading subtitle -->
+  <text x="400" y="620" font-family="sans-serif" font-size="24" font-weight="400" text-anchor="middle" fill="#8b5cf6" opacity="0.8">
+    Loading magical words...
+    <animate attributeName="opacity" values="0.5;1;0.5" dur="1.5s" repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Loading dots -->
+  <g transform="translate(400, 680)">
+    <circle cx="-30" cy="0" r="5" fill="#8b5cf6">
+      <animate attributeName="opacity" values="0.3;1;0.3" dur="1.5s" repeatCount="indefinite" begin="0s"/>
+    </circle>
+    <circle cx="0" cy="0" r="5" fill="#8b5cf6">
+      <animate attributeName="opacity" values="0.3;1;0.3" dur="1.5s" repeatCount="indefinite" begin="0.5s"/>
+    </circle>
+    <circle cx="30" cy="0" r="5" fill="#8b5cf6">
+      <animate attributeName="opacity" values="0.3;1;0.3" dur="1.5s" repeatCount="indefinite" begin="1s"/>
+    </circle>
+  </g>
+  
+  <!-- Floating letters with gentle animation -->
+  <text x="150" y="200" font-family="serif" font-size="36" font-weight="bold" fill="#a855f7" opacity="0.6">
+    S
+    <animateTransform attributeName="transform" type="translate" values="0,0; 10,-5; 0,0" dur="4s" repeatCount="indefinite"/>
+  </text>
+  <text x="650" y="180" font-family="serif" font-size="32" font-weight="bold" fill="#8b5cf6" opacity="0.5">
+    P
+    <animateTransform attributeName="transform" type="translate" values="0,0; -8,8; 0,0" dur="5s" repeatCount="indefinite"/>
+  </text>
+  <text x="120" y="600" font-family="serif" font-size="34" font-weight="bold" fill="#7c3aed" opacity="0.6">
+    E
+    <animateTransform attributeName="transform" type="translate" values="0,0; 12,3; 0,0" dur="3.5s" repeatCount="indefinite"/>
+  </text>
+  <text x="680" y="650" font-family="serif" font-size="30" font-weight="bold" fill="#a855f7" opacity="0.5">
+    L
+    <animateTransform attributeName="transform" type="translate" values="0,0; -5,10; 0,0" dur="4.5s" repeatCount="indefinite"/>
+  </text>
+</svg>

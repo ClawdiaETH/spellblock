@@ -1,0 +1,65 @@
+'use client'
+
+import { useReadContract } from 'wagmi'
+import { formatUnits } from 'viem'
+import { CONTRACTS, SPELLBLOCK_TREASURY_ABI } from '@/config/contracts'
+import { base } from 'viem/chains'
+
+export function BurnCounter() {
+  const chainId = base.id
+  const contracts = CONTRACTS[chainId]
+
+  const { data: totalBurned } = useReadContract({
+    address: contracts.spellBlockTreasury,
+    abi: SPELLBLOCK_TREASURY_ABI,
+    functionName: 'totalBurned',
+    chainId,
+  })
+
+  const formatBurned = (amount: bigint) => {
+    const formatted = parseFloat(formatUnits(amount, 18))
+    if (formatted >= 1_000_000_000) {
+      return (formatted / 1_000_000_000).toFixed(2) + 'B'
+    }
+    if (formatted >= 1_000_000) {
+      return (formatted / 1_000_000).toFixed(1) + 'M'
+    }
+    if (formatted >= 1_000) {
+      return (formatted / 1_000).toFixed(0) + 'K'
+    }
+    return formatted.toLocaleString(undefined, { maximumFractionDigits: 0 })
+  }
+
+  return (
+    <div
+      className="flex items-center gap-2.5 p-3 px-4 rounded-[10px] border mt-5"
+      style={{
+        background: 'var(--surface)',
+        borderColor: 'var(--border)',
+      }}
+    >
+      <div className="text-[22px]">🔥</div>
+      <div className="flex-1">
+        <div className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--text-dim)' }}>
+          Total burned
+        </div>
+        <div className="font-mono text-[15px] font-semibold" style={{ color: 'var(--red)' }}>
+          {formatBurned(totalBurned || BigInt(0))}{' '}
+          <span className="text-[10.5px] font-normal" style={{ color: 'var(--text-dim)' }}>
+            $CLAWDIA
+          </span>
+        </div>
+      </div>
+      <div
+        className="text-[9.5px] font-mono px-[7px] py-0.5 rounded-[3px] border uppercase tracking-wide ml-auto"
+        style={{
+          background: 'rgba(220,38,38,0.1)',
+          borderColor: 'rgba(220,38,38,0.2)',
+          color: 'var(--red)',
+        }}
+      >
+        forever
+      </div>
+    </div>
+  )
+}

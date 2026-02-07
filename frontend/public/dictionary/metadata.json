@@ -1,0 +1,25 @@
+{
+  "version": "1.2.0",
+  "generated": "2026-02-04",
+  "source": "american-english (wamerican 2020.12.07-2)",
+  "frequency_source": "wordfreq (Google Ngrams + multiple corpora)",
+  "frequency_threshold": 1e-07,
+  "min_length": 4,
+  "max_length": 12,
+  "pool_size": 8,
+  "total_words": 41367,
+  "sha256": "08e0a0c696e8a7eeff71150acd4b0366b66115059765756b0266c55fd8977a59",
+  "length_distribution": {
+    "4": 2258,
+    "5": 3951,
+    "6": 5790,
+    "7": 7046,
+    "8": 6890,
+    "9": 5924,
+    "10": 4622,
+    "11": 3018,
+    "12": 1868
+  },
+  "blocklist_entries": 245,
+  "words_blocked": 192
+}

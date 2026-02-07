@@ -1,0 +1,15 @@
+{
+  "network": "base-sepolia",
+  "chainId": 84532,
+  "deployedAt": "2026-02-03T14:30:00Z",
+  "deployer": "0x84d5e34Ad1a91cF2ECAD071a65948fa48F1B4216",
+  "contracts": {
+    "MockCLAWDIA": "0x5b0654368986069f2EAb72681Bfc5d4144fc8a32",
+    "DictionaryVerifier": "0xC5a2662e098ffB3DFFc4a5a5C9CB93648498Ee90",
+    "SpellEngine": "0x76d6e6aB49A9A6Ac1D67A87182b55E64983c4db2",
+    "SpellBlockGame": "0xD033205b72015a45ddFFa93484F13a051a637799",
+    "StakerRewardDistributor": "0xA3c10C957cEbDbfc3737ec259c6deF70E72A03B0"
+  },
+  "rpcUrl": "https://sepolia.base.org",
+  "explorerUrl": "https://sepolia.basescan.org"
+}

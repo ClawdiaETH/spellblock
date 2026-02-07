@@ -1,0 +1,322 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
+import { parseUnits, keccak256, toBytes } from 'viem'
+import { CONTRACTS, SPELLBLOCK_CORE_ABI } from '@/config/contracts'
+import { base } from 'viem/chains'
+import { LetterPool } from './LetterPool'
+
+interface CommitFormProps {
+  roundId: bigint
+  letterPool: string
+  minStake: bigint
+  onCommitSuccess: () => void
+}
+
+export function CommitForm({ 
+  roundId, 
+  letterPool, 
+  minStake,
+  onCommitSuccess 
+}: CommitFormProps) {
+  const [word, setWord] = useState('')
+  const [stake, setStake] = useState(1_000_000)
+  const [usedIndices, setUsedIndices] = useState(new Set<number>())
+  const [committed, setCommitted] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const chainId = base.id
+  const contracts = CONTRACTS[chainId]
+
+  const { writeContract, data: hash, isPending } = useWriteContract()
+  const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash })
+
+  // Track which letters have been used
+  useEffect(() => {
+    const indices = new Set<number>()
+    const poolArray = letterPool.split('')
+    const poolCopy = poolArray.map((l, i) => ({ letter: l, index: i, used: false }))
+    
+    for (const ch of word.toUpperCase()) {
+      const found = poolCopy.find((p) => p.letter === ch && !p.used)
+      if (found) {
+        found.used = true
+        indices.add(found.index)
+      }
+    }
+    
+    setUsedIndices(indices)
+  }, [word, letterPool])
+
+  const handleLetterClick = (letter: string, idx: number) => {
+    if (committed) return
+    setWord((w) => w + letter)
+    setError(null)
+  }
+
+  const handleCommit = async () => {
+    // Validation
+    if (word.length < 3) {
+      setError('Word must be at least 3 letters')
+      return
+    }
+
+    const poolArray = letterPool.split('')
+    const poolCopy = [...poolArray]
+    for (const ch of word.toUpperCase()) {
+      const idx = poolCopy.indexOf(ch)
+      if (idx === -1) {
+        setError(`Letter "${ch}" not in pool or used twice`)
+        return
+      }
+      poolCopy.splice(idx, 1)
+    }
+
+    // Create commitment hash (word + random salt)
+    const salt = `0x${Math.random().toString(36).substring(2, 15).padEnd(64, '0')}` as `0x${string}`
+    const commitment = word.toUpperCase() + salt
+    const commitHash = keccak256(toBytes(commitment))
+    
+    // Store salt locally for reveal phase
+    localStorage.setItem(`spellblock_salt_${roundId}`, salt)
+    localStorage.setItem(`spellblock_word_${roundId}`, word.toUpperCase())
+
+    const stakeAmount = parseUnits(stake.toString(), 18)
+
+    // Submit transaction (stake is sent as value, not as parameter)
+    try {
+      await writeContract({
+        address: contracts.spellBlockCore,
+        abi: SPELLBLOCK_CORE_ABI,
+        functionName: 'commit',
+        args: [commitHash, stakeAmount],
+      })
+    } catch (err: any) {
+      setError(err.message || 'Transaction failed')
+    }
+  }
+
+  useEffect(() => {
+    if (isSuccess) {
+      setCommitted(true)
+      onCommitSuccess()
+    }
+  }, [isSuccess, onCommitSuccess])
+
+  const formatStake = (n: number) => {
+    if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M'
+    if (n >= 1_000) return (n / 1_000).toFixed(0) + 'K'
+    return n.toString()
+  }
+
+  return (
+    <div className="fade-in-up">
+      {/* Constraints Hidden Warning */}
+      <div
+        className="flex gap-3 items-start p-3.5 px-4 rounded-[10px] border mb-1.5"
+        style={{
+          background: 'linear-gradient(135deg, rgba(124,58,237,0.06), rgba(124,58,237,0.12))',
+          borderColor: 'rgba(124,58,237,0.18)',
+        }}
+      >
+        <div className="text-[26px] flex-shrink-0 mt-0.5">🎭</div>
+        <div>
+          <div className="text-[14px] font-semibold mb-0.5">Constraints hidden</div>
+          <div className="text-[12.5px] leading-relaxed" style={{ color: 'var(--text-dim)' }}>
+            A spell (Veto, Anchor, Seal, or Gem) and three valid word lengths will be 
+            revealed at midnight UTC. Hedge wisely.
+          </div>
+        </div>
+      </div>
+
+      {/* Letter Pool */}
+      <div className="flex justify-between items-baseline mt-[18px] mb-2">
+        <h2 className="font-display text-[19px] tracking-tight">Letter pool</h2>
+        <span className="text-[11px] font-mono" style={{ color: 'var(--text-dim)' }}>
+          {letterPool.length} available
+        </span>
+      </div>
+      <LetterPool
+        letters={letterPool}
+        usedIndices={usedIndices}
+        onLetterClick={handleLetterClick}
+        disabled={committed}
+      />
+
+      {/* Word Builder */}
+      <div className="flex justify-between items-baseline mt-[18px] mb-2">
+        <h2 className="font-display text-[19px] tracking-tight">Your word</h2>
+        {word.length > 0 && (
+          <span className="text-[11.5px] font-mono font-medium" style={{ color: 'var(--accent)' }}>
+            {word.length} letters
+          </span>
+        )}
+      </div>
+      <div 
+        className="rounded-[10px] border p-3.5"
+        style={{
+          background: 'var(--surface)',
+          borderColor: 'var(--border)',
+        }}
+      >
+        {/* Word display */}
+        <div className="min-h-[52px] flex items-center justify-center gap-[5px] flex-wrap py-1.5 pb-2.5">
+          {word.length === 0 ? (
+            <span className="text-[14px] italic opacity-40" style={{ color: 'var(--text-dim)' }}>
+              Tap letters or type below...
+            </span>
+          ) : (
+            word.toUpperCase().split('').map((ch, i) => (
+              <span key={i} className="word-char char-pop">
+                {ch}
+              </span>
+            ))
+          )}
+        </div>
+
+        {/* Actions */}
+        <div className="flex gap-[7px] mb-[7px] justify-center">
+          <button
+            onClick={() => !committed && setWord((w) => w.slice(0, -1))}
+            disabled={committed || !word.length}
+            className="text-[11.5px] font-medium px-[11px] py-1 rounded-[5px] border transition-all"
+            style={{
+              background: 'var(--surface-2)',
+              borderColor: 'var(--border)',
+              color: 'var(--text-dim)',
+            }}
+          >
+            ← Back
+          </button>
+          <button
+            onClick={() => !committed && setWord('')}
+            disabled={committed || !word.length}
+            className="text-[11.5px] font-medium px-[11px] py-1 rounded-[5px] border transition-all"
+            style={{
+              background: 'var(--surface-2)',
+              borderColor: 'var(--border)',
+              color: 'var(--text-dim)',
+            }}
+          >
+            Clear
+          </button>
+        </div>
+
+        {/* Text input */}
+        <input
+          type="text"
+          value={word}
+          onChange={(e) => {
+            if (!committed) {
+              const val = e.target.value.toUpperCase().replace(/[^A-Z]/g, '')
+              setWord(val)
+              setError(null)
+            }
+          }}
+          placeholder="Or type directly..."
+          maxLength={15}
+          disabled={committed}
+          className="w-full px-3 py-2 rounded-[7px] border text-[13px] font-mono tracking-widest uppercase"
+          style={{
+            background: 'var(--surface-2)',
+            borderColor: 'var(--border)',
+            color: 'var(--text)',
+          }}
+        />
+      </div>
+
+      {/* Stake Selection */}
+      {!committed && (
+        <div className="mt-1">
+          <div className="flex justify-between items-baseline mt-[18px] mb-2">
+            <h2 className="font-display text-[19px] tracking-tight">Stake</h2>
+          </div>
+
+          {/* Preset buttons */}
+          <div className="flex gap-[7px] flex-wrap mb-2">
+            {[1_000_000, 5_000_000, 10_000_000, 25_000_000].map((amount) => (
+              <button
+                key={amount}
+                onClick={() => setStake(amount)}
+                className="font-mono text-[12px] font-semibold px-[13px] py-1.5 rounded-[7px] border transition-all"
+                style={{
+                  background: stake === amount ? 'var(--accent)' : 'var(--surface)',
+                  color: stake === amount ? '#fff' : 'var(--text)',
+                  borderColor: stake === amount ? 'var(--accent)' : 'var(--border)',
+                }}
+              >
+                {formatStake(amount)}
+              </button>
+            ))}
+          </div>
+
+          {/* Custom input */}
+          <div 
+            className="flex items-center gap-2 rounded-[7px] border px-3"
+            style={{
+              background: 'var(--surface)',
+              borderColor: 'var(--border)',
+            }}
+          >
+            <input
+              type="number"
+              value={stake}
+              onChange={(e) => setStake(Number(e.target.value))}
+              min={1_000_000}
+              step={1_000_000}
+              className="flex-1 py-2 bg-transparent border-none font-mono text-[15px] font-semibold"
+              style={{ color: 'var(--text)' }}
+            />
+            <span className="text-[10.5px] font-semibold whitespace-nowrap" style={{ color: 'var(--text-dim)' }}>
+              $CLAWDIA
+            </span>
+          </div>
+        </div>
+      )}
+
+      {/* Error */}
+      {error && (
+        <div className="mt-3 p-2 rounded text-[12px] font-medium" style={{ background: '#FEE2E2', color: '#DC2626' }}>
+          {error}
+        </div>
+      )}
+
+      {/* Commit Button / Confirmed State */}
+      {!committed ? (
+        <button
+          onClick={handleCommit}
+          disabled={word.length < 3 || isPending || isConfirming}
+          className="btn-commit mt-[18px]"
+        >
+          <span>{isPending || isConfirming ? 'Committing...' : 'Commit word'}</span>
+          <span className="text-[11.5px] font-normal opacity-70">
+            Stake {formatStake(stake)} $CLAWDIA · Word hidden until reveal
+          </span>
+        </button>
+      ) : (
+        <div
+          className="flex gap-3 items-start p-4 rounded-[10px] border mt-[18px]"
+          style={{
+            background: 'linear-gradient(135deg, rgba(22,163,74,0.06), rgba(22,163,74,0.14))',
+            borderColor: 'rgba(22,163,74,0.3)',
+          }}
+        >
+          <div
+            className="w-8 h-8 rounded-full flex items-center justify-center text-[16px] font-bold flex-shrink-0"
+            style={{ background: 'var(--green)', color: '#fff' }}
+          >
+            ✓
+          </div>
+          <div>
+            <div className="text-[15px] font-bold mb-0.5">Committed</div>
+            <div className="text-[12.5px] leading-relaxed" style={{ color: 'var(--text-dim)' }}>
+              Your word <strong>"{word.toUpperCase()}"</strong> is locked with {formatStake(stake)} $CLAWDIA. 
+              Constraints reveal at midnight UTC.
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}

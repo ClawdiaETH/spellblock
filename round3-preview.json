@@ -1,0 +1,16 @@
+{
+  "roundId": 3,
+  "seed": "0xefd29304126ba2efdd7a178cc06ddd5ab8bbd68980d1bcaf62a4287476c34954",
+  "seedHash": "0x32e75b74239b64ecccebd649752595505001063a373f2d48ea7ee0ed14c3514c",
+  "rulerSalt": "0xc6c2135d8274fd0a4fe57432d520559b7b76bbde42dee25b044ba887393cae7f",
+  "validLengths": [
+    4,
+    6,
+    8
+  ],
+  "rulerCommitHash": "0x21a921489f3821e468cd375323de8029aa1e7f8d517764d5bb7125941b6f2908",
+  "letterPool": "0x41454642444F4348",
+  "letters": "AEFBDOCH",
+  "vowels": 3,
+  "consonants": 5
+}

@@ -1,0 +1,18 @@
+{
+  "accountAssociation": {
+    "header": "eyJmaWQiOjI1NDA3NjgsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHg1OGYxZTUxOUUzZjg0QTEwMEM1RmZiMDVkNTJDMzE1M2EzMDg0NTRhIn0",
+    "payload": "eyJkb21haW4iOiJzcGVsbGJsb2NrLnZlcmNlbC5hcHAifQ",
+    "signature": "K7waA9D9HCvpLEyQFrCJR4sR1Fq+oT46+QNZli+3CH4MwHhW1uMkLdflBB4XztLPijfUoGu//QYiGULDMppo1Bw="
+  },
+  "miniapp": {
+    "version": "1",
+    "name": "SpellBlock",
+    "iconUrl": "https://spellblock.vercel.app/icon.png",
+    "homeUrl": "https://spellblock.vercel.app/",
+    "imageUrl": "https://spellblock.vercel.app/og-image.png",
+    "buttonTitle": "Play Now",
+    "splashImageUrl": "https://spellblock.vercel.app/splash.png",
+    "splashBackgroundColor": "#f5f0ec",
+    "webhookUrl": "https://spellblock.vercel.app/api/webhook"
+  }
+}

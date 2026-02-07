@@ -1,0 +1,337 @@
+'use client'
+
+import { useReadContract, useAccount } from 'wagmi'
+import { base } from 'viem/chains'
+import { CONTRACTS, SPELLBLOCK_CORE_ABI } from '@/config/contracts'
+import { PhaseBanner } from './PhaseBanner'
+import { PotDisplay } from './PotDisplay'
+import { CommitForm } from './CommitForm'
+import { RevealForm } from './RevealForm'
+import { BurnCounter } from './BurnCounter'
+import { WalletButton } from './WalletButton'
+import { useEffect, useState } from 'react'
+
+// Round phases based on v3 spec
+enum RoundPhase {
+  Inactive = 0,
+  Commit = 1,
+  Reveal = 2,
+  Finalized = 3
+}
+
+export function GameBoard() {
+  const { address } = useAccount()
+  const chainId = base.id
+  const contracts = CONTRACTS[chainId]
+  const [currentTime, setCurrentTime] = useState(Math.floor(Date.now() / 1000))
+
+  // Update current time every second
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(Math.floor(Date.now() / 1000))
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [])
+
+  // Get current round ID
+  const { data: currentRoundId } = useReadContract({
+    address: contracts.spellBlockCore,
+    abi: SPELLBLOCK_CORE_ABI,
+    functionName: 'currentRoundId',
+    chainId,
+  })
+
+  // Get round data
+  const { data: round, refetch: refetchRound } = useReadContract({
+    address: contracts.spellBlockCore,
+    abi: SPELLBLOCK_CORE_ABI,
+    functionName: 'rounds',
+    args: currentRoundId ? [currentRoundId] : undefined,
+    chainId,
+  })
+
+  // Get user's commitment
+  const { data: commitment, refetch: refetchCommitment } = useReadContract({
+    address: contracts.spellBlockCore,
+    abi: SPELLBLOCK_CORE_ABI,
+    functionName: 'commitments',
+    args: currentRoundId && address ? [currentRoundId, address] : undefined,
+    chainId,
+  })
+
+  // Parse round data from array response
+  const roundData = round ? {
+    roundId: round[0] as bigint,
+    startTime: round[1] as bigint,
+    commitDeadline: round[2] as bigint,
+    revealDeadline: round[3] as bigint,
+    letterPool: round[4] as `0x${string}`,
+    spellId: Number(round[5] || 0),
+    spellParam: (round[6] as `0x${string}`) || '0x00',
+    totalPot: BigInt(String(round[10] || 0)),
+    jackpotBonus: BigInt(String(round[11] || 0)),
+    commitCount: BigInt(String(round[12] || 0)),
+  } : null
+
+  // Compute phase from timestamps
+  const computePhase = () => {
+    if (!roundData || !roundData.startTime) return RoundPhase.Inactive
+    const start = Number(roundData.startTime)
+    const commitEnd = Number(roundData.commitDeadline)
+    const revealEnd = Number(roundData.revealDeadline)
+    
+    if (currentTime < start) return RoundPhase.Inactive
+    if (currentTime >= start && currentTime < commitEnd) return RoundPhase.Commit
+    if (currentTime >= commitEnd && currentTime < revealEnd) return RoundPhase.Reveal
+    return RoundPhase.Finalized
+  }
+  const phase = computePhase()
+
+  // Decode letter pool from bytes32
+  const letterPool = roundData?.letterPool ? 
+    Buffer.from(roundData.letterPool.slice(2, 18), 'hex').toString('utf-8').replace(/\0/g, '') : 
+    ''
+
+  // Spell is revealed after commit phase ends
+  const isSpellRevealed = phase === RoundPhase.Reveal || phase === RoundPhase.Finalized
+
+  // Has user committed/revealed?
+  const hasCommitted = commitment && commitment.commitHash !== '0x0000000000000000000000000000000000000000000000000000000000000000'
+  const hasRevealed = commitment?.revealed
+
+  // Min stake for v3 spec (1M $CLAWDIA)
+  const minStake = BigInt('1000000000000000000000000')
+
+  // Determine which deadline to show in phase banner
+  const phaseEnd = phase === RoundPhase.Commit 
+    ? Number(roundData?.commitDeadline || 0)
+    : Number(roundData?.revealDeadline || 0)
+
+  // ═══════════════════════════════════════════════════════════════
+  // INACTIVE STATE
+  // ═══════════════════════════════════════════════════════════════
+  if (!currentRoundId || currentRoundId === 0n || phase === RoundPhase.Inactive) {
+    return (
+      <>
+        {/* Header */}
+        <header
+          className="flex items-center justify-between px-5 py-3.5 border-b sticky top-0 z-50"
+          style={{
+            background: 'var(--surface)',
+            borderColor: 'var(--border)',
+          }}
+        >
+          <div className="flex items-center gap-2.5">
+            <h1 className="font-display text-[22px] flex items-center gap-[7px]" style={{ color: 'var(--text)' }}>
+              <span className="text-[20px]">🔮</span>
+              SpellBlock
+            </h1>
+          </div>
+          <WalletButton />
+        </header>
+
+        {/* Waiting Content */}
+        <main className="max-w-[600px] mx-auto px-4 pt-5 pb-20">
+          <div
+            className="p-8 rounded-[14px] border text-center"
+            style={{
+              background: 'var(--surface)',
+              borderColor: 'var(--border)',
+            }}
+          >
+            <h2 className="text-[24px] font-display mb-3">🔮 Preparing next round</h2>
+            <p className="text-[15px] leading-relaxed mb-6" style={{ color: 'var(--text-dim)' }}>
+              The next round of SpellBlock will begin at 16:00 UTC daily!
+            </p>
+
+            <div className="grid md:grid-cols-2 gap-4 max-w-md mx-auto mb-6">
+              <div className="p-4 rounded-lg" style={{ background: 'var(--surface-2)' }}>
+                <div className="text-[14px] font-bold mb-2">⏰ Daily schedule</div>
+                <div className="text-[13px] leading-relaxed" style={{ color: 'var(--text-dim)' }}>
+                  • Opens: 16:00 UTC<br/>
+                  • Commits close: 00:00 UTC<br/>
+                  • Reveals close: 04:00 UTC
+                </div>
+              </div>
+              <div className="p-4 rounded-lg" style={{ background: 'var(--surface-2)' }}>
+                <div className="text-[14px] font-bold mb-2">💰 Min stake</div>
+                <div className="text-[13px]" style={{ color: 'var(--text-dim)' }}>
+                  1,000,000 $CLAWDIA
+                </div>
+              </div>
+            </div>
+
+            <p className="text-[12px]" style={{ color: 'var(--text-dim)' }}>
+              Follow{' '}
+              <a
+                href="https://x.com/Clawdia772541"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold hover:underline"
+                style={{ color: 'var(--accent)' }}
+              >
+                @Clawdia
+              </a>{' '}
+              for round announcements
+            </p>
+          </div>
+
+          <BurnCounter />
+        </main>
+      </>
+    )
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // ACTIVE GAME
+  // ═══════════════════════════════════════════════════════════════
+  return (
+    <>
+      {/* Header */}
+      <header
+        className="flex items-center justify-between px-5 py-3.5 border-b sticky top-0 z-50"
+        style={{
+          background: 'var(--surface)',
+          borderColor: 'var(--border)',
+        }}
+      >
+        <div className="flex items-center gap-2.5">
+          <h1 className="font-display text-[22px] flex items-center gap-[7px]" style={{ color: 'var(--text)' }}>
+            <span className="text-[20px]">🔮</span>
+            SpellBlock
+          </h1>
+          <span
+            className="font-mono text-[10.5px] px-[7px] py-0.5 rounded-[5px] border font-medium"
+            style={{
+              background: 'var(--surface-2)',
+              borderColor: 'var(--border)',
+              color: 'var(--text-dim)',
+            }}
+          >
+            Round #{currentRoundId?.toString()}
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2">
+          {/* TODO: Add help/activity buttons */}
+          <WalletButton />
+        </div>
+      </header>
+
+      {/* Phase Banner */}
+      <PhaseBanner phase={phase} phaseEnd={phaseEnd} />
+
+      {/* Main Content */}
+      <main className="max-w-[600px] mx-auto px-4 pt-5 pb-20">
+        {/* Hero Pot Display */}
+        {roundData && (
+          <PotDisplay
+            totalPot={roundData.totalPot}
+            commitCount={Number(roundData.commitCount)}
+            season={{ number: 3, day: 7 }} // TODO: Get from contract
+            minStake={minStake}
+          />
+        )}
+
+        {/* Phase-specific content */}
+        {phase === RoundPhase.Commit && roundData && (
+          <>
+            {hasCommitted ? (
+              <div
+                className="p-6 rounded-[14px] border text-center"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(22,163,74,0.06), rgba(22,163,74,0.14))',
+                  borderColor: 'rgba(22,163,74,0.3)',
+                }}
+              >
+                <p className="text-[18px] font-bold mb-2" style={{ color: 'var(--green)' }}>
+                  ✅ Word committed!
+                </p>
+                <p className="text-[13px]" style={{ color: 'var(--text-dim)' }}>
+                  Your word is hashed onchain. Come back at midnight to see if it survives the reveal.
+                </p>
+              </div>
+            ) : (
+              currentRoundId && (
+                <CommitForm
+                  roundId={currentRoundId}
+                  letterPool={letterPool}
+                  minStake={minStake}
+                  onCommitSuccess={() => {
+                    refetchCommitment()
+                    refetchRound()
+                  }}
+                />
+              )
+            )}
+          </>
+        )}
+
+        {phase === RoundPhase.Reveal && roundData && (
+          <>
+            {hasCommitted && !hasRevealed && currentRoundId ? (
+              <RevealForm
+                roundId={currentRoundId}
+                spellId={roundData.spellId}
+                spellParam={roundData.spellParam}
+                onRevealSuccess={() => {
+                  refetchCommitment()
+                  refetchRound()
+                }}
+              />
+            ) : hasRevealed ? (
+              <div
+                className="p-6 rounded-[14px] border text-center"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(22,163,74,0.06), rgba(22,163,74,0.14))',
+                  borderColor: 'rgba(22,163,74,0.3)',
+                }}
+              >
+                <p className="text-[18px] font-bold mb-2" style={{ color: 'var(--green)' }}>
+                  ✅ Word revealed!
+                </p>
+                <p className="text-[13px]" style={{ color: 'var(--text-dim)' }}>
+                  Waiting for round to finalize...
+                </p>
+              </div>
+            ) : (
+              <div
+                className="p-6 rounded-[14px] border text-center"
+                style={{
+                  background: 'rgba(255,215,0,0.1)',
+                  borderColor: 'rgba(255,215,0,0.3)',
+                }}
+              >
+                <p className="text-[15px]" style={{ color: 'var(--gold)' }}>
+                  You didn't commit to this round
+                </p>
+              </div>
+            )}
+          </>
+        )}
+
+        {phase === RoundPhase.Finalized && roundData && (
+          <div
+            className="p-6 rounded-[14px] border text-center"
+            style={{
+              background: 'var(--surface)',
+              borderColor: 'var(--border)',
+            }}
+          >
+            <h2 className="text-[24px] font-bold mb-3" style={{ color: 'var(--gold)' }}>
+              🏆 Round complete!
+            </h2>
+            <p className="text-[13px] mb-4" style={{ color: 'var(--text-dim)' }}>
+              Final pot: {(Number((roundData?.totalPot ?? 0n) + (roundData?.jackpotBonus ?? 0n)) / 1e18).toLocaleString()} $CLAWDIA
+            </p>
+            <p className="text-[12px]" style={{ color: 'var(--text-dim)' }}>
+              Next round starts at 16:00 UTC tomorrow
+            </p>
+          </div>
+        )}
+
+        <BurnCounter />
+      </main>
+    </>
+  )
+}

@@ -1,0 +1,339 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ═══════════════════════════════════════════════════════════════
+   SPELLBLOCK — LIGHT MODE REDESIGN
+   Clean, minimal, inspired by NYT Wordle
+═══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Light mode color system */
+  --bg: #F6F5F1;           /* warm off-white page background */
+  --surface: #FFFFFF;       /* card/panel backgrounds */
+  --surface-2: #EEECE7;    /* secondary surfaces, inputs */
+  --border: #D8D5CC;        /* soft warm gray borders */
+  --text: #1A1A1F;          /* primary text */
+  --text-dim: #7C7A72;      /* muted/secondary text */
+  --accent: #2B6CB0;        /* primary action blue */
+  --accent-glow: #2B6CB030; /* subtle blue shadow */
+  --green: #16A34A;         /* success, pass */
+  --red: #DC2626;           /* fail, burn */
+  --gold: #D97706;          /* gold accents, ruler */
+  --purple: #7C3AED;        /* reveal phase accent */
+  
+  /* Font families */
+  --font-display: 'Instrument Serif', serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+input:focus,
+button:focus {
+  outline: none;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Font utilities */
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* Color utilities */
+.text-primary {
+  color: var(--text);
+}
+
+.text-secondary {
+  color: var(--text-dim);
+}
+
+.bg-surface {
+  background: var(--surface);
+}
+
+.bg-surface-2 {
+  background: var(--surface-2);
+}
+
+.border-default {
+  border-color: var(--border);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ANIMATIONS
+═══════════════════════════════════════════════════════════════ */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes revealChar {
+  from {
+    opacity: 0;
+    transform: scale(0.6) rotateX(60deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotateX(0);
+  }
+}
+
+.char-pop {
+  animation: fadeInUp 0.15s ease both;
+}
+
+.reveal-char {
+  animation: revealChar 0.35s ease both;
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.25s ease both;
+}
+
+.pulse-animation {
+  animation: pulse 2s infinite;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   COMPONENT STYLES
+═══════════════════════════════════════════════════════════════ */
+
+/* Letter pool tiles */
+.letter-tile {
+  width: 44px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 700;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  transition: all 0.15s;
+  cursor: pointer;
+  user-select: none;
+}
+
+.letter-tile:hover:not(:disabled) {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.letter-tile:disabled {
+  cursor: default;
+  opacity: 0.2;
+  transform: scale(0.88);
+}
+
+/* Word builder character */
+.word-char {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 46px;
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: 700;
+  background: rgba(43, 108, 176, 0.10);
+  border: 2px solid rgba(43, 108, 176, 0.30);
+  border-radius: 7px;
+  color: var(--accent);
+}
+
+/* Hidden character (reveal phase, before reveal) */
+.hidden-char {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 42px;
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 600;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  color: var(--text-dim);
+}
+
+/* Revealed character */
+.revealed-char {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 46px;
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: 700;
+  border-radius: 7px;
+  border: 2px solid;
+}
+
+.revealed-char.winner {
+  background: rgba(22, 163, 74, 0.14);
+  border-color: rgba(22, 163, 74, 0.40);
+  color: var(--green);
+}
+
+.revealed-char.burned {
+  background: rgba(220, 38, 38, 0.14);
+  border-color: rgba(220, 38, 38, 0.40);
+  color: var(--red);
+}
+
+/* Gradient buttons */
+.btn-commit {
+  width: 100%;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, var(--accent), #1E5A9E);
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: var(--font-body);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  box-shadow: 0 3px 12px var(--accent-glow);
+  transition: all 0.15s;
+}
+
+.btn-commit:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 16px var(--accent-glow);
+}
+
+.btn-commit:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-reveal {
+  width: 100%;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, var(--purple), #6D28D9);
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: var(--font-body);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  box-shadow: 0 3px 12px rgba(124, 58, 237, 0.2);
+  transition: all 0.15s;
+}
+
+.btn-reveal:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 16px rgba(124, 58, 237, 0.3);
+}
+
+/* Toast notification */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 22px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  z-index: 300;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+  animation: fadeInUp 0.25s ease;
+}
+
+/* Modal overlay */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface-2);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-dim);
+}
