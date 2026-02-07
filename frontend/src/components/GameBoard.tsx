@@ -51,15 +51,14 @@ function Countdown({ deadline }: { deadline: number }) {
 
 function PhaseBanner({ phase, deadline, season }: { phase: RoundPhase; deadline: number; season?: { number: number; day: number } }) {
   const isCommit = phase === RoundPhase.Commit
-  const bgGradient = isCommit
-    ? 'linear-gradient(135deg, #E8F0FE 0%, #F0F4FF 100%)'
-    : 'linear-gradient(135deg, #F0EAFE 0%, #F5F0FF 100%)'
-  const dotColor = isCommit ? '#2B6CB0' : '#7C3AED'
 
   return (
     <div
-      className="px-5 py-5 border-b border-border"
-      style={{ background: bgGradient }}
+      className="px-5 py-5 border-b"
+      style={{ 
+        backgroundColor: 'var(--surface-2)',
+        borderColor: 'var(--border)'
+      }}
     >
       <div className="max-w-[600px] mx-auto">
         <div className="flex items-start justify-between mb-4 flex-wrap gap-3">
@@ -68,8 +67,8 @@ function PhaseBanner({ phase, deadline, season }: { phase: RoundPhase; deadline:
               <div
                 className="w-2.5 h-2.5 rounded-full"
                 style={{
-                  background: dotColor,
-                  boxShadow: `0 2px 8px ${dotColor}20`,
+                  background: isCommit ? 'var(--accent)' : 'var(--purple)',
+                  boxShadow: isCommit ? '0 2px 8px var(--accent-glow)' : '0 2px 8px rgba(124, 58, 237, 0.2)',
                 }}
               />
               <span className="text-lg font-semibold">
