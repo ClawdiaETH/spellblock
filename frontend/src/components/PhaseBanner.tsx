@@ -47,8 +47,8 @@ export function PhaseBanner({ phase, phaseEnd }: PhaseBannerProps) {
     <div
       className={`px-5 pt-[18px] pb-3.5 border-b ${
         isCommit 
-          ? 'bg-blue-50 dark:bg-blue-950/90' 
-          : 'bg-purple-50 dark:bg-purple-950/90'
+          ? 'bg-blue-50 dark:bg-slate-900' 
+          : 'bg-purple-50 dark:bg-slate-900'
       }`}
       style={{
         borderColor: 'var(--border)',
