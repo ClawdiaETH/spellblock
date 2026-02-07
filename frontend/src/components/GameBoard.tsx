@@ -284,7 +284,7 @@ export function GameBoard() {
                 <div>
                   <div className="font-semibold text-sm mb-1">Constraints hidden</div>
                   <div className="text-xs text-text-dim leading-relaxed">
-                    A spell (Veto, Anchor, Seal, or Gem) and three valid word lengths will be revealed at 08:00 UTC / 03:00 AM ET. Hedge wisely.
+                    ONE spell (Veto, Anchor, Seal, OR Gem) + three valid word lengths will be revealed at 08:00 UTC / 03:00 AM ET. Your word must pass BOTH. Hedge wisely.
                   </div>
                 </div>
               </div>

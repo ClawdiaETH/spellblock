@@ -132,7 +132,7 @@ export default function Home() {
                   {
                     n: '3',
                     title: 'The double reveal',
-                    desc: 'At midnight UTC, two hidden constraints appear:'
+                    desc: 'At midnight UTC, TWO hidden constraints are revealed. Your word must pass BOTH to win:'
                   },
                   {
                     n: '4',
@@ -149,6 +149,9 @@ export default function Home() {
                       <div className="text-[12.5px] text-text-dim leading-relaxed">{step.desc}</div>
                       {step.n === '3' && (
                         <div className="mt-2 space-y-1 text-[12.5px]">
+                          <div className="font-semibold text-[11.5px] uppercase tracking-wide opacity-60 mb-1.5 mt-2">
+                            Constraint 1: ONE of these spells
+                          </div>
                           <div className="flex items-center gap-1.5 py-0.5">
                             <span>🚫</span>
                             <strong>Veto:</strong>
@@ -169,8 +172,11 @@ export default function Home() {
                             <strong>Gem:</strong>
                             <span className="opacity-70">Must have double letters</span>
                           </div>
-                          <div className="text-text-dim mt-2">
-                            Plus the <strong>Ruler</strong> — three valid word lengths your word must match.
+                          <div className="font-semibold text-[11.5px] uppercase tracking-wide opacity-60 mb-1 mt-3">
+                            Constraint 2: The Ruler (ALWAYS required)
+                          </div>
+                          <div className="text-text-dim">
+                            Three valid word lengths are revealed. Your word must match one of them.
                           </div>
                         </div>
                       )}
