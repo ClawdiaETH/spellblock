@@ -55,19 +55,20 @@ export default function Home() {
                 </p>
               </div>
               <RoundBadge />
-              <a
-                href="/skill.md"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="ml-1 px-2.5 py-1.5 text-[11px] font-mono font-semibold bg-surface-2 hover:bg-accent/10 border border-border hover:border-accent rounded-lg text-text-dim hover:text-accent transition-all"
-                title="Agent automation skill"
-              >
-                skill.md
-              </a>
             </div>
             
             {/* Right side actions */}
             <div className="flex items-center gap-2">
+              <a
+                href="/skill.md"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-2.5 py-1.5 text-[11px] font-mono font-semibold bg-surface-2 hover:bg-accent/10 border border-border hover:border-accent rounded-lg text-text-dim hover:text-accent transition-all"
+                title="Agent automation skill"
+              >
+                skill.md
+              </a>
+              
               <button
                 onClick={() => setShowRules(true)}
                 className="w-[38px] h-[38px] border border-border rounded-lg flex items-center justify-center text-text-dim hover:text-text hover:border-accent transition-colors font-bold text-lg"
