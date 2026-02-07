@@ -21,7 +21,6 @@ export function CommitForm({ roundId, letterPool, minStake, onCommitSuccess }: C
   const [salt, setSalt] = useState('')
   const [error, setError] = useState('')
   const [step, setStep] = useState<'approve' | 'commit'>('approve')
-  const [usedIndices, setUsedIndices] = useState<Set<number>>(new Set())
   
   const { address, isConnected } = useAccount()
   const chainId = base.id
@@ -101,15 +100,7 @@ export function CommitForm({ roundId, letterPool, minStake, onCommitSuccess }: C
     }
   }, [commitSuccess, roundId, word, salt, stake, address, onCommitSuccess])
 
-  // Track letter usage count (for visual feedback, but allow reuse)
-  useEffect(() => {
-    const counts = new Map<string, number>()
-    for (const ch of word.toUpperCase()) {
-      counts.set(ch, (counts.get(ch) || 0) + 1)
-    }
-    // No longer prevent reuse - letters can be clicked multiple times
-    setUsedIndices(new Set()) // Clear restrictions
-  }, [word, letterPool])
+  // Removed letter usage tracking - letters can be clicked unlimited times
 
   const addLetter = (letter: string, idx: number) => {
     // Allow any letter to be clicked multiple times
