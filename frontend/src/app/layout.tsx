@@ -37,7 +37,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta
           name="fc:miniapp"
@@ -57,7 +57,7 @@ export default function RootLayout({
           })}
         />
       </head>
-      <body className={`${instrumentSerif.variable} ${dmSans.variable} ${jetbrainsMono.variable} font-body bg-[var(--bg)] text-[var(--text)]`}>
+      <body className={`${instrumentSerif.variable} ${dmSans.variable} ${jetbrainsMono.variable} font-body`}>
         <Providers>
           {children}
         </Providers>

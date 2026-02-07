@@ -17,19 +17,19 @@ module.exports = {
         'main': ['DM Sans', 'sans-serif'],
       },
       colors: {
-        // New light mode colors
-        'bg': '#F6F5F1',
-        'surface': '#FFFFFF',
-        'surface-2': '#EEECE7',
-        'border': '#D8D5CC',
-        'text': '#1A1A1F',
-        'text-dim': '#7C7A72',
-        'accent': '#2B6CB0',
-        'accent-glow': '#2B6CB030',
-        'green': '#16A34A',
-        'red': '#DC2626',
-        'gold': '#D97706',
-        'purple': '#7C3AED',
+        // Theme-aware colors via CSS variables
+        'bg': 'var(--bg)',
+        'surface': 'var(--surface)',
+        'surface-2': 'var(--surface-2)',
+        'border': 'var(--border)',
+        'text': 'var(--text)',
+        'text-dim': 'var(--text-dim)',
+        'accent': 'var(--accent)',
+        'accent-glow': 'var(--accent-glow)',
+        'green': 'var(--green)',
+        'red': 'var(--red)',
+        'gold': 'var(--gold)',
+        'purple': 'var(--purple)',
         
         // Legacy colors as CSS variables
         'void': {
