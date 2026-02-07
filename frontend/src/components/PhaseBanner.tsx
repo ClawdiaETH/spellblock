@@ -47,8 +47,8 @@ export function PhaseBanner({ phase, phaseEnd }: PhaseBannerProps) {
     <div
       className={`px-5 pt-[18px] pb-3.5 border-b ${
         isCommit 
-          ? 'bg-blue-50 dark:bg-blue-950/20' 
-          : 'bg-purple-50 dark:bg-purple-950/20'
+          ? 'bg-blue-50 dark:bg-blue-950/40' 
+          : 'bg-purple-50 dark:bg-purple-950/40'
       }`}
       style={{
         borderColor: 'var(--border)',
@@ -67,7 +67,7 @@ export function PhaseBanner({ phase, phaseEnd }: PhaseBannerProps) {
             />
             {isCommit ? 'Commit phase' : 'Reveal phase'}
           </div>
-          <div className="text-[13px] text-secondary max-w-[380px]">
+          <div className="text-[13px] text-text-dim max-w-[380px]">
             {isCommit
               ? 'Craft your word and stake your claim. Constraints are hidden.'
               : 'Spell & ruler revealed. Show your word to claim winnings.'}
@@ -75,7 +75,7 @@ export function PhaseBanner({ phase, phaseEnd }: PhaseBannerProps) {
         </div>
 
         <div className="text-right">
-          <div className="text-[10px] text-secondary uppercase tracking-wider mb-0.5">
+          <div className="text-[10px] text-text-dim uppercase tracking-wider mb-0.5">
             Phase ends in
           </div>
           <div className="font-mono text-[26px] font-semibold tracking-wide">
