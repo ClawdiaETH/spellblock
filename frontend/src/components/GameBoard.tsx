@@ -198,8 +198,9 @@ export function GameBoard() {
     letterPool: round[4] as `0x${string}`,
     spellId: Number(round[5] || 0),
     spellParam: (round[6] as `0x${string}`) || '0x00',
-    totalPot: BigInt(String(round[10] || 0)),
-    commitCount: BigInt(String(round[12] || 0)),
+    validLengths: round[10] as number[],
+    totalPot: BigInt(String(round[11] || 0)),
+    commitCount: BigInt(String(round[13] || 0)),
   } : null
 
   const computePhase = () => {
@@ -366,6 +367,7 @@ export function GameBoard() {
                   roundId={currentRoundId}
                   spellId={spellId}
                   spellParam={spellParam}
+                  validLengths={roundData?.validLengths || []}
                   onRevealSuccess={() => {
                     refetchCommitment()
                     refetchRound()

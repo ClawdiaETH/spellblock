@@ -10,10 +10,11 @@ interface RevealFormProps {
   roundId: bigint
   spellId: number
   spellParam: `0x${string}`
+  validLengths: number[]
   onRevealSuccess?: () => void
 }
 
-export function RevealForm({ roundId, spellId, spellParam, onRevealSuccess }: RevealFormProps) {
+export function RevealForm({ roundId, spellId, spellParam, validLengths, onRevealSuccess }: RevealFormProps) {
   const [word, setWord] = useState('')
   const [salt, setSalt] = useState('')
   const [revealed, setRevealed] = useState(false)
@@ -70,8 +71,7 @@ export function RevealForm({ roundId, spellId, spellParam, onRevealSuccess }: Re
         break
     }
     
-    // Check ruler (hardcoded for now)
-    const validLengths = [5, 8, 11]
+    // Check ruler against contract-provided valid lengths
     const ruler = validLengths.includes(w.length)
     
     setPassesSpell(spell)
