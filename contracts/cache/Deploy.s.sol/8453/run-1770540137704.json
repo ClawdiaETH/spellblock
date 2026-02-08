@@ -1,0 +1,28 @@
+{
+  "transactions": [
+    {
+      "rpc": "https://mainnet.base.org"
+    },
+    {
+      "rpc": "https://mainnet.base.org"
+    },
+    {
+      "rpc": "https://mainnet.base.org"
+    },
+    {
+      "rpc": "https://mainnet.base.org"
+    },
+    {
+      "rpc": "https://mainnet.base.org"
+    },
+    {
+      "rpc": "https://mainnet.base.org"
+    },
+    {
+      "rpc": "https://mainnet.base.org"
+    },
+    {
+      "rpc": "https://mainnet.base.org"
+    }
+  ]
+}
