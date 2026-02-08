@@ -102,6 +102,8 @@ export function RevealForm({ roundId, spellId, spellParam, onRevealSuccess }: Re
   }
 
   const isWinner = passesSpell && passesRuler
+  const isConsolation = passesSpell && !passesRuler
+  const isBurned = !passesSpell
 
   if (!word) {
     return (
@@ -136,7 +138,7 @@ export function RevealForm({ roundId, spellId, spellParam, onRevealSuccess }: Re
               {word.toUpperCase().split('').map((ch, i) => (
                 <span
                   key={i}
-                  className={`revealed-char ${isWinner ? 'winner' : 'burned'} animate-revealChar`}
+                  className={`revealed-char ${isWinner ? 'winner' : isConsolation ? 'consolation' : 'burned'} animate-revealChar`}
                   style={{ animationDelay: `${i * 0.07}s` }}
                 >
                   {ch}
@@ -163,19 +165,25 @@ export function RevealForm({ roundId, spellId, spellParam, onRevealSuccess }: Re
         <div
           className="flex gap-3.5 items-center p-4 rounded-xl border animate-fadeInUp"
           style={{
-            background: isWinner ? 'linear-gradient(135deg, #16A34A10, #16A34A20)' : 'linear-gradient(135deg, #DC262610, #DC262620)',
-            borderColor: isWinner ? '#16A34A40' : '#DC262640',
+            background: isWinner 
+              ? 'linear-gradient(135deg, #16A34A10, #16A34A20)' 
+              : isConsolation 
+              ? 'linear-gradient(135deg, #D9770610, #D9770620)'
+              : 'linear-gradient(135deg, #DC262610, #DC262620)',
+            borderColor: isWinner ? '#16A34A40' : isConsolation ? '#D9770640' : '#DC262640',
           }}
         >
-          <div className="text-4xl">{isWinner ? '🏆' : '🔥'}</div>
+          <div className="text-4xl">{isWinner ? '🏆' : isConsolation ? '🛡️' : '🔥'}</div>
           <div>
-            <div className="font-bold text-lg mb-1" style={{ color: isWinner ? '#16A34A' : '#DC2626' }}>
-              {isWinner ? 'Winner!' : 'Burned'}
+            <div className="font-bold text-lg mb-1" style={{ color: isWinner ? '#16A34A' : isConsolation ? '#D97706' : '#DC2626' }}>
+              {isWinner ? 'Winner!' : isConsolation ? 'Consolation' : 'Burned'}
             </div>
             <div className="text-xs text-text-dim leading-relaxed">
               {isWinner
                 ? 'Your word survived both constraints. Winnings distribute at 15:45 UTC / 10:45 AM ET.'
-                : 'Your word failed. Your stake has been permanently burned.'}
+                : isConsolation
+                ? 'Passed spell but failed ruler. You recover your stake (no profit, no loss).'
+                : 'Your word failed the spell. Your stake has been permanently burned.'}
             </div>
           </div>
         </div>
