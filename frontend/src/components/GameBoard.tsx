@@ -198,7 +198,7 @@ export function GameBoard() {
     letterPool: round[4] as `0x${string}`,
     spellId: Number(round[5] || 0),
     spellParam: (round[6] as `0x${string}`) || '0x00',
-    validLengths: round[10] as number[],
+    validLengths: Array.isArray(round[10]) ? (round[10] as any[]).map(n => Number(n)) : [],
     totalPot: BigInt(String(round[11] || 0)),
     commitCount: BigInt(String(round[13] || 0)),
   } : null
