@@ -28,7 +28,7 @@ const VOWELS = new Set(['A', 'E', 'I', 'O', 'U']);
 const CONSONANTS = new Set(['B','C','D','F','G','H','J','K','L','M','N','P','Q','R','S','T','V','W','X','Y','Z']);
 
 /**
- * Generate weighted random letters ensuring diversity
+ * Generate weighted random letters ensuring diversity and at least 2 vowels
  */
 function generateRandomLetters() {
     const letters = Object.keys(LETTER_WEIGHTS);
@@ -46,6 +46,19 @@ function generateRandomLetters() {
     let attempts = 0;
     const MAX_ATTEMPTS = 1000;
     
+    // First, ensure we get at least 2 vowels
+    const vowelArray = ['A', 'E', 'I', 'O', 'U'];
+    const guaranteedVowels = new Set();
+    
+    while (guaranteedVowels.size < 2) {
+        const randomVowel = vowelArray[crypto.randomInt(0, vowelArray.length)];
+        guaranteedVowels.add(randomVowel);
+    }
+    
+    // Add the guaranteed vowels to selected
+    guaranteedVowels.forEach(vowel => selected.add(vowel));
+    
+    // Now fill remaining slots with weighted random selection
     while (selected.size < 8 && attempts < MAX_ATTEMPTS) {
         attempts++;
         
