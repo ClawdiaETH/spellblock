@@ -4,71 +4,69 @@ Automated social posting for SpellBlock game events.
 
 ## What It Does
 
-### Event-Driven Posts (Every 15 minutes)
+Posts at exact times when SpellBlock events happen:
 
-The event listener (`event-listener.js`) watches the SpellBlock contract on Base and posts when:
-
-1. **Round Opens** (RoundOpened event)
-   - Posts letters and game rules
+1. **Round Opens** (16:05 UTC / 10:05am CT daily)
+   - Posts letters for the new round
    - Tags @base
 
-2. **Spell Revealed** (SeedRevealed event)  
-   - Announces which spell is active
-   - Describes the rule
+2. **Seed Revealed** (00:05 UTC / 6:05pm CT daily)
+   - Reminds players commit phase ended
+   - Warns about unrevealed forfeiture
 
-3. **Round Finalized** (RoundFinalized event)
-   - Posts winners and prize pool
-   - Announces next round
+3. **Round Finalized** (04:05 UTC / 10:05pm CT daily)
+   - Announces results are in
+   - Previews next round timing
 
-### Weekly "How to Play" Post
-
-Posts every Monday at 9 AM CST explaining:
-- Game mechanics
-- All 4 spell types
-- How to play (humans + AI agents)
-- Prize structure
+4. **Weekly How-to** (Mondays 15:00 UTC / 9am CT)
+   - Explains game mechanics
+   - Describes all 4 spells
+   - Prize structure
 
 ## Files
 
-- `event-listener.js` - Watches contract events and posts
-- `weekly-howto.sh` - Weekly how-to-play post
-- `package.json` - Node dependencies
-- `.last-block.json` - Tracks last processed block (auto-generated)
+- `post-round-opened.sh` - Posts when round opens
+- `post-seed-revealed.sh` - Posts when commit phase ends
+- `post-round-finalized.sh` - Posts when round settles
+- `weekly-howto.sh` - Weekly gameplay guide
 
 ## Installation
 
-```bash
-cd ~/clawd/projects/clawdia-spellblock/social
-npm install
-```
+No dependencies - uses `cast` CLI for blockchain queries.
 
 ## Testing
 
 ```bash
-# Test event listener
-node event-listener.js
-
-# Test weekly post
+# Test individual posts
+./post-round-opened.sh
+./post-seed-revealed.sh
+./post-round-finalized.sh
 ./weekly-howto.sh
 ```
 
 ## Automation
 
-Runs via OpenClaw cron:
+Runs via crontab:
 
-- **Event listener**: Every 15 minutes
-- **Weekly post**: Mondays 9 AM CST
-
-View scheduled jobs:
 ```bash
-cron list
+# Round opened (16:05 UTC / 10:05am CT daily)
+5 16 * * * ~/clawd/projects/clawdia-spellblock/social/post-round-opened.sh >> ~/clawd/logs/spellblock-social.log 2>&1
+
+# Seed revealed (00:05 UTC / 6:05pm CT daily)
+5 0 * * * ~/clawd/projects/clawdia-spellblock/social/post-seed-revealed.sh >> ~/clawd/logs/spellblock-social.log 2>&1
+
+# Round finalized (04:05 UTC / 10:05pm CT daily)
+5 4 * * * ~/clawd/projects/clawdia-spellblock/social/post-round-finalized.sh >> ~/clawd/logs/spellblock-social.log 2>&1
+
+# Weekly how-to (Mondays 15:00 UTC / 9am CT)
+0 15 * * 1 ~/clawd/projects/clawdia-spellblock/social/weekly-howto.sh >> ~/clawd/logs/spellblock-social.log 2>&1
 ```
 
 ## Posting Channels
 
 Posts to both:
-- **Twitter**: @ClawdiaBotAI via OAuth 2.0
-- **Farcaster**: @clawdia via Neynar API
+- **Twitter**: @ClawdiaBotAI via OAuth 2.0 (`~/clawd/skills/x-api/scripts/x-post.mjs`)
+- **Farcaster**: @clawdia via Neynar API (`~/clawd/scripts/farcaster-cast.sh`)
 
 ## Contract Details
 
@@ -76,23 +74,18 @@ Posts to both:
 - **Network**: Base mainnet
 - **RPC**: https://mainnet.base.org
 
-## Events Monitored
+## Round Schedule
 
-- `RoundOpened(uint256 indexed roundId, bytes8 letterPool, bytes32 rulerCommitHash, uint256 startTime)`
-- `SeedRevealed(uint256 indexed roundId, bytes8 letterPool, uint8 spellId, bytes32 spellParam, uint8[3] validLengths)`
-- `RoundFinalized(uint256 indexed roundId, uint256 totalPot, uint256 burnAmount, address[] winners)`
+- **Opens**: 16:00 UTC (10am CT)
+- **Commit closes**: 00:00 UTC (8 hours later)
+- **Reveal closes**: 04:00 UTC (4 hours later)
+- **Next round**: 16:00 UTC (12 hours later)
 
-## Spell Names
+## Spells
 
 | ID | Name | Rule |
 |----|------|------|
 | 0 | Veto | Word cannot contain vetoed letter |
 | 1 | Anchor | Word must start with anchor letter |
 | 2 | Seal | Word must end with seal letter |
-| 3 | Gem | Word must have adjacent identical letters |
-
-## Maintenance
-
-State is tracked in `.last-block.json` - no need to manually reset unless something breaks.
-
-If posts are duplicated, delete `.last-block.json` and it will start fresh from last 100 blocks.
+| 3 | Gem | Word must have adjacent identical letters (like "coffee") |
