@@ -2,15 +2,17 @@ import { base } from 'viem/chains'
 
 export const CONTRACTS = {
   [base.id]: {
-    spellBlockCore: '0xa596aAd2edCE7B5A64707D5Bf7921B640A2c26F9' as const, // SpellBlockGame mainnet 2026-02-08 Fresh deployment
-    spellBlockGame: '0xa596aAd2edCE7B5A64707D5Bf7921B640A2c26F9' as const, // Alias for spellBlockCore
-    spellBlockTreasury: '0x4FFdEDA2e839783F1825221aC882eb2F70eA73D5' as const, // StakerRewardDistributor
-    spellBlockScoring: '0xbAB63F8f8F0F924AD0750e1c20CD52D0F4cEf02d' as const, // SpellRegistry
+    // 2026-02-17: Updated deployment with vowel validation fix
+    // Old addresses (2026-02-08): Core: 0xa596aAd2edCE7B5A64707D5Bf7921B640A2c26F9
+    spellBlockCore: '0xdfC4d2A4bde11B8C62D8a5bAa1a6E76fd2183592' as const, // SpellBlockGame with vowel validation
+    spellBlockGame: '0xdfC4d2A4bde11B8C62D8a5bAa1a6E76fd2183592' as const, // Alias for spellBlockCore
+    spellBlockTreasury: '0x6646cc7c5ff76b1363e46bAf584acB8d39C3488c' as const, // StakerRewardDistributor
+    spellBlockScoring: '0x88cCddD3be7421aA030C571a747Fd0235523Cfd0' as const, // SpellRegistry
     clawdiaToken: '0xbbd9aDe16525acb4B336b6dAd3b9762901522B07' as const,
-    dictionaryVerifier: '0xEEC7CE58b2B85F8FaBd631525DFCf18c219B433A' as const, // DictionaryVerifier
+    dictionaryVerifier: '0xF86eD92C13d57E4b7D316DC56167258a8f68aE60' as const, // DictionaryVerifier
     streakTracker: '0x0000000000000000000000000000000000000000' as const, // Embedded in game
     seasonAccumulator: '0x0000000000000000000000000000000000000000' as const, // TBD
-    spellEngine: '0x4eA869BF7f6496Cf359b70419A6ed20f27851FBA' as const, // SpellEngine
+    spellEngine: '0x2262CFe461aF72fFA9a07aAf8a6dBA641692FFaE' as const, // SpellEngine
   },
 }
 

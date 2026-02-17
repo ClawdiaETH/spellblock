@@ -191,6 +191,16 @@ contract SpellBlockGame is ReentrancyGuard, Pausable {
             );
         }
         
+        // Validate letter pool contains at least 2 vowels (A, E, I, O, U)
+        uint256 vowelCount = 0;
+        for (uint256 i = 0; i < 8; i++) {
+            uint8 letter = uint8(letterPool[i]);
+            if (letter == 0x41 || letter == 0x45 || letter == 0x49 || letter == 0x4F || letter == 0x55) {
+                vowelCount++;
+            }
+        }
+        require(vowelCount >= 2, "Letter pool must contain at least 2 vowels");
+        
         currentRoundId++;
         uint256 rid = currentRoundId;
 
