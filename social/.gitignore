@@ -1,0 +1,9 @@
+# Dependencies
+node_modules/
+
+# Runtime files
+.last-block.json
+
+# Logs
+*.log
+npm-debug.log*

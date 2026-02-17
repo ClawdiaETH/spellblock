@@ -1,0 +1,12 @@
+{
+  "name": "spellblock-social",
+  "version": "1.0.0",
+  "description": "SpellBlock social posting automation",
+  "main": "event-listener.js",
+  "scripts": {
+    "listen": "node event-listener.js"
+  },
+  "dependencies": {
+    "viem": "^2.44.2"
+  }
+}
