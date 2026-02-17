@@ -10,6 +10,11 @@ import {IDictionaryVerifier} from "./interfaces/IDictionaryVerifier.sol";
 import {IStakerRewardDistributor} from "./interfaces/IStakerRewardDistributor.sol";
 import {SpellRegistry} from "./SpellRegistry.sol";
 
+/// @notice Minimal interface for ERC20 burn functionality
+interface IERC20Burnable {
+    function burn(uint256 amount) external;
+}
+
 /// @title SpellBlockGame
 /// @notice Core game contract for SpellBlock - a commit-reveal word game
 /// @dev One round per day. Players commit words + stakes, reveal after spell is shown.
@@ -436,7 +441,7 @@ contract SpellBlockGame is ReentrancyGuard, Pausable {
         uint256 distributablePot = totalPot - burnAmount - stakerAmount - opsAmount;
 
         // Execute burn
-        clawdiaToken.transfer(address(0xdead), burnAmount);
+        IERC20Burnable(address(clawdiaToken)).burn(burnAmount);
         globalBurnCounter += burnAmount;
         emit TokensBurned(currentRoundId, burnAmount, globalBurnCounter);
 
