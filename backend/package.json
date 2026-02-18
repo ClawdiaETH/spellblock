@@ -1,0 +1,19 @@
+{
+  "name": "spellblock-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "auto-reveal": "tsx scripts/auto-reveal-all-words.ts",
+    "generate-key": "node -e \"console.log(require('crypto').randomBytes(32).toString('hex'))\""
+  },
+  "dependencies": {
+    "pg": "^8.11.3",
+    "viem": "^2.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/pg": "^8.10.9",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  }
+}

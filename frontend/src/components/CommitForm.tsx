@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useAccount, useWriteContract, useReadContract, useWaitForTransactionReceipt } from 'wagmi'
+import { useAccount, useWriteContract, useReadContract, useWaitForTransactionReceipt, useSignMessage } from 'wagmi'
 import { parseUnits, formatUnits, keccak256, encodePacked, toHex } from 'viem'
 import { base } from 'viem/chains'
 import { CONTRACTS, SPELLBLOCK_ABI, ERC20_ABI } from '@/config/contracts'
@@ -51,6 +51,7 @@ export function CommitForm({ roundId, letterPool, minStake, onCommitSuccess }: C
 
   const { writeContract: commit, data: commitHash, isPending: isCommitting } = useWriteContract()
   const { isSuccess: commitSuccess } = useWaitForTransactionReceipt({ hash: commitHash })
+  const { signMessageAsync } = useSignMessage()
 
   useEffect(() => {
     if (allowance && stake) {
@@ -73,6 +74,38 @@ export function CommitForm({ roundId, letterPool, minStake, onCommitSuccess }: C
     if (commitSuccess && address) {
       const saveCommitData = async () => {
         try {
+          // Calculate commitHash for signing
+          const commitHashValue = keccak256(
+            encodePacked(
+              ['uint256', 'address', 'string', 'bytes32'],
+              [roundId, address, word.toLowerCase(), salt as `0x${string}`]
+            )
+          )
+
+          // Sign commitHash
+          const signature = await signMessageAsync({ message: commitHashValue })
+
+          // Save to backend
+          try {
+            await fetch('/api/commit/save', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                roundId: roundId.toString(),
+                address,
+                word: word.toLowerCase(),
+                salt,
+                commitHash: commitHashValue,
+                signature,
+              }),
+            })
+            console.log('✅ Commit saved to backend for auto-reveal')
+          } catch (apiError) {
+            console.error('❌ Failed to save commit to backend:', apiError)
+            // Continue anyway - player can still manually reveal
+          }
+
+          // Save to localStorage (for manual reveal fallback)
           const merkleProof = await getMerkleProof(word)
           const commitData = {
             roundId: roundId.toString(),
@@ -98,7 +131,7 @@ export function CommitForm({ roundId, letterPool, minStake, onCommitSuccess }: C
       }
       saveCommitData()
     }
-  }, [commitSuccess, roundId, word, salt, stake, address, onCommitSuccess])
+  }, [commitSuccess, roundId, word, salt, stake, address, onCommitSuccess, signMessageAsync])
 
   // Removed letter usage tracking - letters can be clicked unlimited times
 
