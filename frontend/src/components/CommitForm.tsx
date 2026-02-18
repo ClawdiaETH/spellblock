@@ -271,7 +271,7 @@ export function CommitForm({ roundId, letterPool, minStake, onCommitSuccess }: C
             onChange={(e) => setStake(e.target.value)}
             className="flex-1 py-2 bg-transparent border-none text-text font-mono text-base font-semibold focus:outline-none"
             min={1000000}
-            step={1000000}
+            step={1}
           />
           <span className="text-[10.5px] text-text-dim font-semibold whitespace-nowrap">$CLAWDIA</span>
         </div>
