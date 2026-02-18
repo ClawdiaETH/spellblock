@@ -70,7 +70,7 @@ Posts to both:
 
 ## Contract Details
 
-- **Address**: `0xa596aAd2edCE7B5A64707D5Bf7921B640A2c26F9`
+- **Address**: `0xF3cCa88c9F00b5EdD523797f4c04A6c3C20E317e` (updated 2026-02-18 with vowel validation + burn fixes)
 - **Network**: Base mainnet
 - **RPC**: https://mainnet.base.org
 

@@ -3,7 +3,7 @@
 
 cd "$(dirname "$0")"
 
-ROUND=$(cast call 0xa596aAd2edCE7B5A64707D5Bf7921B640A2c26F9 "currentRound()(uint256)" --rpc-url https://mainnet.base.org)
+ROUND=$(cast call 0xF3cCa88c9F00b5EdD523797f4c04A6c3C20E317e "currentRound()(uint256)" --rpc-url https://mainnet.base.org)
 
 TEXT="⏰ SpellBlock Round $ROUND commit phase closed!
 
