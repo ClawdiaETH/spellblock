@@ -4,22 +4,25 @@ export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:$HOME/.foundry/bin:$
 
 cd "$(dirname "$0")"
 
-ROUND=$(/Users/starl3xx/.foundry/bin/cast call 0xF3cCa88c9F00b5EdD523797f4c04A6c3C20E317e "currentRoundId()(uint256)" --rpc-url https://mainnet.base.org)
+CONTRACT="0xa596aAd2edCE7B5A64707D5Bf7921B640A2c26F9"
+ROUND=$(/Users/starl3xx/.foundry/bin/cast call $CONTRACT "currentRoundId()(uint256)" --rpc-url https://mainnet.base.org)
 LETTERS=$(node -e "
 const { createPublicClient, http, parseAbiItem } = require('viem');
 const { base } = require('viem/chains');
 
 async function getLetters() {
   const client = createPublicClient({ chain: base, transport: http('https://mainnet.base.org') });
+  const latestBlock = await client.getBlockNumber();
+  const fromBlock = latestBlock - 500n; // search last ~500 blocks (~17 min)
   const logs = await client.getLogs({
-    address: '0xF3cCa88c9F00b5EdD523797f4c04A6c3C20E317e',
+    address: '0xa596aAd2edCE7B5A64707D5Bf7921B640A2c26F9',
     event: parseAbiItem('event RoundOpened(uint256 indexed round, bytes8 letters)'),
-    fromBlock: 'latest',
+    fromBlock,
     toBlock: 'latest'
   });
   if (logs.length > 0) {
-    const letters = logs[0].args.letters;
-    return Buffer.from(letters.slice(2), 'hex').toString('utf8');
+    const letters = logs[logs.length - 1].args.letters;
+    return Buffer.from(letters.slice(2), 'hex').toString('utf8').replace(/\0/g, '');
   }
   return null;
 }

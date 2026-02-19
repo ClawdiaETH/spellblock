@@ -4,7 +4,7 @@ export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:$HOME/.foundry/bin:$
 
 cd "$(dirname "$0")"
 
-ROUND=$(/Users/starl3xx/.foundry/bin/cast call 0xF3cCa88c9F00b5EdD523797f4c04A6c3C20E317e "currentRoundId()(uint256)" --rpc-url https://mainnet.base.org)
+ROUND=$(/Users/starl3xx/.foundry/bin/cast call 0xa596aAd2edCE7B5A64707D5Bf7921B640A2c26F9 "currentRoundId()(uint256)" --rpc-url https://mainnet.base.org)
 
 TEXT="🏆 SpellBlock Round $((ROUND - 1)) results are IN!
 
