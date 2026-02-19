@@ -1,9 +1,10 @@
 #!/bin/bash
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:$HOME/.foundry/bin:$PATH"
 # Post when round opens (16:00 UTC / 10am CT)
 
 cd "$(dirname "$0")"
 
-ROUND=$(cast call 0xF3cCa88c9F00b5EdD523797f4c04A6c3C20E317e "currentRound()(uint256)" --rpc-url https://mainnet.base.org)
+ROUND=$(cast call 0xF3cCa88c9F00b5EdD523797f4c04A6c3C20E317e "currentRoundId()(uint256)" --rpc-url https://mainnet.base.org)
 LETTERS=$(node -e "
 const { createPublicClient, http, parseAbiItem } = require('viem');
 const { base } = require('viem/chains');
