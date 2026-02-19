@@ -1,6 +1,6 @@
 #!/bin/bash
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:$HOME/.foundry/bin:$PATH"
-# Post when seed revealed (00:00 UTC / 6pm CT)
+# Post when commit phase closes and reveal begins (08:00 UTC / 2am CT)
 
 cd "$(dirname "$0")"
 
@@ -8,7 +8,7 @@ ROUND=$(/Users/starl3xx/.foundry/bin/cast call 0xa596aAd2edCE7B5A64707D5Bf7921B6
 
 TEXT="⏰ SpellBlock Round $ROUND commit phase closed!
 
-Seed revealed — reveal your words in the next 4 hours.
+Seed revealed — you have 7h45m to reveal your words.
 
 Unrevealed commits = forfeited entry.
 

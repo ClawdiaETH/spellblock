@@ -4,19 +4,20 @@ Automated social posting for SpellBlock game events.
 
 ## What It Does
 
-Posts at exact times when SpellBlock events happen:
+Posts aligned to actual on-chain game phases (contract: 16h commit + 7h45m reveal):
 
 1. **Round Opens** (16:05 UTC / 10:05am CT daily)
    - Posts letters for the new round
    - Tags @base
 
-2. **Seed Revealed** (00:05 UTC / 6:05pm CT daily)
-   - Reminds players commit phase ended
+2. **Commit Closed / Reveal Begins** (08:05 UTC / 2:05am CT daily)
+   - Alerts players commit phase ended
    - Warns about unrevealed forfeiture
+   - 7h45m reveal window remaining
 
-3. **Round Finalized** (04:05 UTC / 10:05pm CT daily)
-   - Announces results are in
-   - Previews next round timing
+3. **Round Finalized** (15:50 UTC / 9:50am CT daily)
+   - Announces results on-chain
+   - Notes next round opens in ~10 min
 
 4. **Weekly How-to** (Mondays 15:00 UTC / 9am CT)
    - Explains game mechanics
@@ -52,11 +53,11 @@ Runs via crontab:
 # Round opened (16:05 UTC / 10:05am CT daily)
 5 16 * * * ~/clawd/projects/clawdia-spellblock/social/post-round-opened.sh >> ~/clawd/logs/spellblock-social.log 2>&1
 
-# Seed revealed (00:05 UTC / 6:05pm CT daily)
-5 0 * * * ~/clawd/projects/clawdia-spellblock/social/post-seed-revealed.sh >> ~/clawd/logs/spellblock-social.log 2>&1
+# Commit closed / reveal begins (08:05 UTC / 2:05am CT daily)
+5 8 * * * ~/clawd/projects/clawdia-spellblock/social/post-seed-revealed.sh >> ~/clawd/logs/spellblock-social.log 2>&1
 
-# Round finalized (04:05 UTC / 10:05pm CT daily)
-5 4 * * * ~/clawd/projects/clawdia-spellblock/social/post-round-finalized.sh >> ~/clawd/logs/spellblock-social.log 2>&1
+# Round finalized (15:50 UTC / 9:50am CT daily)
+50 15 * * * ~/clawd/projects/clawdia-spellblock/social/post-round-finalized.sh >> ~/clawd/logs/spellblock-social.log 2>&1
 
 # Weekly how-to (Mondays 15:00 UTC / 9am CT)
 0 15 * * 1 ~/clawd/projects/clawdia-spellblock/social/weekly-howto.sh >> ~/clawd/logs/spellblock-social.log 2>&1
@@ -77,9 +78,10 @@ Posts to both:
 ## Round Schedule
 
 - **Opens**: 16:00 UTC (10am CT)
-- **Commit closes**: 00:00 UTC (8 hours later)
-- **Reveal closes**: 04:00 UTC (4 hours later)
-- **Next round**: 16:00 UTC (12 hours later)
+- **Commit closes**: 08:00 UTC (16 hours later / 2am CT)
+- **Reveal closes**: 15:45 UTC (7h45m after commit / 9:45am CT)
+- **Finalize**: 15:45 UTC (9:45am CT, ~15 min before next open)
+- **Next round**: 16:00 UTC (10am CT)
 
 ## Spells
 
