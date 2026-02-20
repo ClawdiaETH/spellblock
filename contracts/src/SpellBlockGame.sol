@@ -689,6 +689,57 @@ contract SpellBlockGame is ReentrancyGuard, Pausable {
         operator = _operator;
     }
 
+    /// @notice Swap the SpellRegistry address (emergency use: fix verifyRulerCommitment bugs)
+    function setSpellRegistry(address _registry) external onlyOwner {
+        spellRegistry = SpellRegistry(_registry);
+    }
+
+    /// @notice Fix a bad rulerCommitHash stored during openRound (use when hash was computed incorrectly)
+    function overrideRulerCommitHash(uint256 roundId, bytes32 newHash) external onlyOwner {
+        require(!rounds[roundId].finalized, "Round already finalized");
+        rounds[roundId].rulerCommitHash = newHash;
+    }
+
+    /// @notice Emergency finalize a specific round (bypasses currentRoundId constraint)
+    /// @dev Only valid after revealDeadline. Rolls valid pot to next round if no winners.
+    function adminFinalizeRound(uint256 roundId) external onlyOwner nonReentrant {
+        Round storage r = rounds[roundId];
+        require(r.startTime > 0, "Round does not exist");
+        require(block.timestamp >= r.revealDeadline, "Reveal not over");
+        require(!r.finalized, "Already finalized");
+
+        uint256 totalPot = r.totalStaked + r.jackpotBonus;
+        uint256 burnAmount = (totalPot * burnBps) / 10000;
+        uint256 stakerAmount = (totalPot * stakerBps) / 10000;
+        uint256 opsAmount = (totalPot * operationsBps) / 10000;
+        uint256 distributablePot = totalPot - burnAmount - stakerAmount - opsAmount;
+
+        if (burnAmount > 0) {
+            IERC20Burnable(address(clawdiaToken)).burn(burnAmount);
+            globalBurnCounter += burnAmount;
+        }
+        if (stakerAmount > 0 && address(stakerDistributor) != address(0)) {
+            clawdiaToken.transfer(address(stakerDistributor), stakerAmount);
+            stakerDistributor.notifyReward(roundId, stakerAmount);
+        }
+        if (opsAmount > 0) {
+            clawdiaToken.transfer(operator, opsAmount);
+        }
+
+        // No winner distribution — roll everything into next round rollover
+        if (distributablePot > 0) {
+            rolloverAmount += distributablePot;
+        }
+
+        r.finalized = true;
+        emit RoundFinalized(roundId, totalPot, burnAmount, 0);
+    }
+
+    /// @notice Recover ERC20 tokens accidentally sent or stuck in this contract
+    function recoverERC20(address token, uint256 amount, address to) external onlyOwner {
+        IERC20(token).transfer(to, amount);
+    }
+
     function setConfig(
         uint256 _minStake,
         uint16 _burnBps,

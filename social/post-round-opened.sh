@@ -29,12 +29,12 @@ async function getLetters() {
   const fromBlock = latestBlock - 2000n;
   const logs = await client.getLogs({
     address: CONTRACT,
-    event: parseAbiItem('event RoundOpened(uint256 indexed round, bytes8 letters)'),
+    event: parseAbiItem('event RoundOpened(uint256 indexed roundId, bytes8 letterPool, bytes32 rulerCommitHash, uint256 startTime)'),
     fromBlock,
     toBlock: 'latest'
   });
   if (logs.length > 0) {
-    const letters = logs[logs.length - 1].args.letters;
+    const letters = logs[logs.length - 1].args.letterPool;
     return Buffer.from(letters.slice(2), 'hex').toString('utf8').replace(/\0/g, '');
   }
   return null;
