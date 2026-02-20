@@ -17,6 +17,16 @@ echo "Contract: $CONTRACT"
 echo "Operator: $WALLET"
 echo ""
 
+# Check that reveal deadline has passed before attempting finalize
+REVEAL_DEADLINE=$(/Users/starl3xx/.foundry/bin/cast call $CONTRACT "rounds(uint256)(uint256,uint256,uint256,uint256)" "$CURRENT_ROUND" --rpc-url https://mainnet.base.org 2>/dev/null | awk 'NR==4{print $1}')
+NOW=$(date +%s)
+if [ -n "$REVEAL_DEADLINE" ] && [ "$NOW" -lt "$REVEAL_DEADLINE" ]; then
+  WAIT_MINS=$(( (REVEAL_DEADLINE - NOW) / 60 ))
+  echo "⏳ Reveal phase still open for ~${WAIT_MINS} more minutes"
+  echo "Skipping finalize — reveal deadline not yet reached."
+  exit 0
+fi
+
 echo "Finalizing Round $CURRENT_ROUND..."
 TX=$(/Users/starl3xx/.foundry/bin/cast send $CONTRACT \
   "finalizeRound()" \
