@@ -3,12 +3,13 @@
 # Must be run by operator wallet
 
 set -e
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:$HOME/.foundry/bin:$PATH"
 
 CONTRACTS_DIR="$HOME/clawd/projects/spellblock-unified/contracts"
-CONTRACT=$(cat "$HOME/clawd/projects/spellblock-unified/deployments/latest.json" | jq -r '.contracts.SpellBlockGame')
+CONTRACT=$(cat "$HOME/clawd/projects/spellblock-unified/deployments/latest.json" | /opt/homebrew/bin/jq -r '.contracts.SpellBlockGame')
 
 # Get current round
-CURRENT_ROUND=$(cast call $CONTRACT "currentRoundId()(uint256)" --rpc-url https://mainnet.base.org)
+CURRENT_ROUND=$(/Users/starl3xx/.foundry/bin/cast call $CONTRACT "currentRoundId()(uint256)" --rpc-url https://mainnet.base.org)
 echo "Current round: $CURRENT_ROUND"
 
 # Find most recent secrets file for this round
@@ -46,13 +47,13 @@ echo "Contract: $CONTRACT"
 echo ""
 
 # Get operator
-OPERATOR=$(cast call $CONTRACT "operator()(address)" --rpc-url https://mainnet.base.org)
+OPERATOR=$(/Users/starl3xx/.foundry/bin/cast call $CONTRACT "operator()(address)" --rpc-url https://mainnet.base.org)
 echo "Operator: $OPERATOR"
 echo ""
 
 # Check current wallet
-PRIVATE_KEY=$(cat ~/.clawdbot/secrets/signing_key)
-WALLET=$(cast wallet address --private-key $PRIVATE_KEY)
+PRIVATE_KEY=$(~/clawd/scripts/get-secret.sh signing_key)
+WALLET=$(/Users/starl3xx/.foundry/bin/cast wallet address --private-key $PRIVATE_KEY)
 echo "Your wallet: $WALLET"
 echo ""
 
@@ -69,7 +70,7 @@ echo "✅ Wallet matches operator. Proceeding with reveal..."
 echo ""
 
 # Reveal seed and ruler
-cast send $CONTRACT "revealSeedAndRuler(bytes32,uint8[3],bytes32)" \
+/Users/starl3xx/.foundry/bin/cast send $CONTRACT "revealSeedAndRuler(bytes32,uint8[3],bytes32)" \
   "$SEED" \
   "[$L1,$L2,$L3]" \
   "$RULER_SALT" \

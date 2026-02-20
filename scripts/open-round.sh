@@ -3,14 +3,15 @@
 # Should run at 16:00 UTC daily
 
 set -e
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:$HOME/.foundry/bin:$PATH"
 
 CONTRACTS_DIR="$HOME/clawd/projects/spellblock-unified/contracts"
-CONTRACT=$(cat "$HOME/clawd/projects/spellblock-unified/deployments/latest.json" | jq -r '.contracts.SpellBlockGame')
-PRIVATE_KEY=$(cat ~/.clawdbot/secrets/signing_key)
-WALLET=$(cast wallet address --private-key $PRIVATE_KEY)
+CONTRACT=$(cat "$HOME/clawd/projects/spellblock-unified/deployments/latest.json" | /opt/homebrew/bin/jq -r '.contracts.SpellBlockGame')
+PRIVATE_KEY=$(~/clawd/scripts/get-secret.sh signing_key)
+WALLET=$(/Users/starl3xx/.foundry/bin/cast wallet address --private-key $PRIVATE_KEY)
 
 # Get current round
-CURRENT_ROUND=$(cast call $CONTRACT "currentRoundId()(uint256)" --rpc-url https://mainnet.base.org)
+CURRENT_ROUND=$(/Users/starl3xx/.foundry/bin/cast call $CONTRACT "currentRoundId()(uint256)" --rpc-url https://mainnet.base.org)
 NEXT_ROUND=$((CURRENT_ROUND + 1))
 
 echo "=== SpellBlock Round $NEXT_ROUND Opening ==="
@@ -22,16 +23,25 @@ echo ""
 SEED=$(openssl rand -hex 32)
 RULER_SALT=$(openssl rand -hex 32)
 
-# Random letter pool (8 unique letters)
-LETTERS=$(echo {A..Z} | tr ' ' '\n' | shuf | head -8 | tr -d '\n')
+# Random letter pool (8 unique letters, guaranteed ≥2 vowels per contract requirement)
+LETTERS=$(python3 -c "
+import random
+vowels = list('AEIOU')
+consonants = list('BCDFGHJKLMNPQRSTVWXYZ')
+random.shuffle(vowels)
+random.shuffle(consonants)
+pool = vowels[:3] + consonants[:5]
+random.shuffle(pool)
+print(''.join(pool[:8]))
+")
 
 # Hash seed
-SEED_HASH=$(cast keccak "0x$SEED")
+SEED_HASH=$(/Users/starl3xx/.foundry/bin/cast keccak "0x$SEED")
 
 # Pick 3 random valid lengths (4-8)
 LENGTHS=($(shuf -i 4-8 -n 3 | sort -n))
 RULER_STRING="${LENGTHS[0]}${LENGTHS[1]}${LENGTHS[2]}"
-RULER_COMMIT_HASH=$(cast keccak "$(echo -n "${RULER_STRING}${RULER_SALT}")")
+RULER_COMMIT_HASH=$(/Users/starl3xx/.foundry/bin/cast keccak "$(echo -n "${RULER_STRING}${RULER_SALT}")")
 
 # Convert letter pool to bytes8
 LETTER_POOL_HEX="0x$(echo -n "$LETTERS" | xxd -p | tr -d '\n')"
@@ -73,7 +83,7 @@ echo ""
 
 # Open round
 echo "Opening Round $NEXT_ROUND..."
-TX=$(cast send $CONTRACT \
+TX=$(/Users/starl3xx/.foundry/bin/cast send $CONTRACT \
   "openRound(bytes32,bytes32,bytes8)" \
   "$SEED_HASH" \
   "$RULER_COMMIT_HASH" \

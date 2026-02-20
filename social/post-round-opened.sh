@@ -1,21 +1,34 @@
 #!/bin/bash
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:$HOME/.foundry/bin:$PATH"
 # Post when round opens (16:00 UTC / 10am CT)
+# Reads contract from deployments file — no hardcoded addresses
 
 cd "$(dirname "$0")"
 
-CONTRACT="0xa596aAd2edCE7B5A64707D5Bf7921B640A2c26F9"
-ROUND=$(/Users/starl3xx/.foundry/bin/cast call $CONTRACT "currentRoundId()(uint256)" --rpc-url https://mainnet.base.org)
+DEPLOYMENTS="$HOME/clawd/projects/spellblock-unified/deployments/latest.json"
+CONTRACT=$(cat "$DEPLOYMENTS" | /opt/homebrew/bin/jq -r '.contracts.SpellBlockGame')
+ROUND=$(/Users/starl3xx/.foundry/bin/cast call $CONTRACT "currentRoundId()(uint256)" --rpc-url https://mainnet.base.org 2>/dev/null)
+
+if [ -z "$ROUND" ]; then
+  echo "❌ Could not fetch round ID from $CONTRACT"
+  exit 1
+fi
+
+echo "Contract: $CONTRACT"
+echo "Round: $ROUND"
+
+# Get letters from recent RoundOpened event
 LETTERS=$(/opt/homebrew/bin/node -e "
 const { createPublicClient, http, parseAbiItem } = require('viem');
 const { base } = require('viem/chains');
+const CONTRACT = '$CONTRACT';
 
 async function getLetters() {
   const client = createPublicClient({ chain: base, transport: http('https://mainnet.base.org') });
   const latestBlock = await client.getBlockNumber();
-  const fromBlock = latestBlock - 2000n; // search last ~2000 blocks (~67 min)
+  const fromBlock = latestBlock - 2000n;
   const logs = await client.getLogs({
-    address: '0xa596aAd2edCE7B5A64707D5Bf7921B640A2c26F9',
+    address: CONTRACT,
     event: parseAbiItem('event RoundOpened(uint256 indexed round, bytes8 letters)'),
     fromBlock,
     toBlock: 'latest'
@@ -26,11 +39,11 @@ async function getLetters() {
   }
   return null;
 }
-getLetters().then(l => console.log(l || ''));
-")
+getLetters().then(l => console.log(l || '')).catch(() => console.log(''));
+" 2>/dev/null)
 
 if [ -z "$LETTERS" ]; then
-  echo "No letters found"
+  echo "No letters found in recent events — round may not have opened yet"
   exit 1
 fi
 
@@ -38,12 +51,13 @@ TEXT="SpellBlock Round $ROUND is LIVE! 🔮
 
 Your letters: $LETTERS
 
-8 hours to commit your best 5-letter words.
+8 hours to commit your best words.
 Prize: \$CLAWDIA
 
 Play: spellblock.app
 
 @base"
 
+echo "Posting: $TEXT"
 /Users/starl3xx/clawd/skills/x-api/scripts/x-post.mjs "$TEXT"
 /Users/starl3xx/clawd/scripts/farcaster-cast.sh "$TEXT" --channel=base
