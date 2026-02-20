@@ -41,7 +41,15 @@ SEED_HASH=$(/Users/starl3xx/.foundry/bin/cast keccak "0x$SEED")
 # Pick 3 random valid lengths (4-8)
 LENGTHS=($(shuf -i 4-8 -n 3 | sort -n))
 RULER_STRING="${LENGTHS[0]}${LENGTHS[1]}${LENGTHS[2]}"
-RULER_COMMIT_HASH=$(/Users/starl3xx/.foundry/bin/cast keccak "$(echo -n "${RULER_STRING}${RULER_SALT}")")
+
+# Compute rulerCommitHash matching contract's keccak256(abi.encodePacked(roundId, l0, l1, l2, salt))
+# Pack: uint256(32 bytes) + uint8 + uint8 + uint8 + bytes32 = 67 bytes
+ROUND_HEX=$(printf '%064x' $NEXT_ROUND)
+L0_HEX=$(printf '%02x' ${LENGTHS[0]})
+L1_HEX=$(printf '%02x' ${LENGTHS[1]})
+L2_HEX=$(printf '%02x' ${LENGTHS[2]})
+RULER_PACKED="0x${ROUND_HEX}${L0_HEX}${L1_HEX}${L2_HEX}${RULER_SALT}"
+RULER_COMMIT_HASH=$(/Users/starl3xx/.foundry/bin/cast keccak "$RULER_PACKED")
 
 # Convert letter pool to bytes8
 LETTER_POOL_HEX="0x$(echo -n "$LETTERS" | xxd -p | tr -d '\n')"
