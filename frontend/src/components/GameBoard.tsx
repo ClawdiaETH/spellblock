@@ -78,7 +78,7 @@ function PhaseBanner({ phase, deadline, season }: { phase: RoundPhase; deadline:
             <div className="text-sm text-text-dim max-w-md">
               {isCommit
                 ? 'Craft your word and stake your claim. Constraints are hidden.'
-                : 'Spell & ruler revealed. Show your word to claim winnings.'}
+                : 'Spell & ruler revealed. Auto-reveal is processing your word.'}
             </div>
           </div>
           
