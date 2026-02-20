@@ -6,14 +6,14 @@ cd "$(dirname "$0")"
 
 CONTRACT="0xa596aAd2edCE7B5A64707D5Bf7921B640A2c26F9"
 ROUND=$(/Users/starl3xx/.foundry/bin/cast call $CONTRACT "currentRoundId()(uint256)" --rpc-url https://mainnet.base.org)
-LETTERS=$(node -e "
+LETTERS=$(/opt/homebrew/bin/node -e "
 const { createPublicClient, http, parseAbiItem } = require('viem');
 const { base } = require('viem/chains');
 
 async function getLetters() {
   const client = createPublicClient({ chain: base, transport: http('https://mainnet.base.org') });
   const latestBlock = await client.getBlockNumber();
-  const fromBlock = latestBlock - 500n; // search last ~500 blocks (~17 min)
+  const fromBlock = latestBlock - 2000n; // search last ~2000 blocks (~67 min)
   const logs = await client.getLogs({
     address: '0xa596aAd2edCE7B5A64707D5Bf7921B640A2c26F9',
     event: parseAbiItem('event RoundOpened(uint256 indexed round, bytes8 letters)'),
