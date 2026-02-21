@@ -43,10 +43,33 @@ async function apiGet(path, params = {}) {
   });
 
   if (res.status === 401) {
-    // Attempt token refresh via x-post.mjs infrastructure (it auto-refreshes)
     log('Token expired, triggering refresh...');
-    execSync('~/clawd/skills/x-api/scripts/x-post.mjs --noop 2>/dev/null || true', { shell: '/bin/bash' });
-    // Retry once
+    try {
+      const clientId = execSync('~/clawd/scripts/get-secret.sh x_oauth2_client_id', { shell: '/bin/bash' }).toString().trim();
+      const clientSecret = execSync('~/clawd/scripts/get-secret.sh x_oauth2_client_secret', { shell: '/bin/bash' }).toString().trim();
+      const refreshToken = execSync('security find-generic-password -s bagman-agent -a x_oauth2_refresh_token -w', { shell: '/bin/bash' }).toString().trim();
+      const creds = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+      const refreshRes = await fetch('https://api.twitter.com/2/oauth2/token', {
+        method: 'POST',
+        headers: { 'Authorization': `Basic ${creds}`, 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `grant_type=refresh_token&refresh_token=${encodeURIComponent(refreshToken)}`,
+      });
+      if (refreshRes.ok) {
+        const tokens = await refreshRes.json();
+        execSync(`security add-generic-password -s bagman-agent -a x_oauth2_access_token -w "${tokens.access_token}" -U`, { shell: '/bin/bash' });
+        if (tokens.refresh_token) {
+          execSync(`security add-generic-password -s bagman-agent -a x_oauth2_refresh_token -w "${tokens.refresh_token}" -U`, { shell: '/bin/bash' });
+          writeFileSync(`${process.env.HOME}/.clawdbot/secrets/x_oauth2_refresh_token`, tokens.refresh_token);
+        }
+        writeFileSync(`${process.env.HOME}/.clawdbot/secrets/x_oauth2_access_token`, tokens.access_token);
+        log('✅ Token refreshed successfully');
+      } else {
+        log(`⚠️ Refresh failed: ${refreshRes.status}`);
+      }
+    } catch (e) {
+      log(`⚠️ Refresh error: ${e.message}`);
+    }
+    // Retry once with new token
     const res2 = await fetch(url, {
       headers: { Authorization: `Bearer ${getToken()}` },
     });

@@ -48,8 +48,7 @@ export const db = {
       VALUES ($1, $2, $3, $4, $5, $6)
       ON CONFLICT (round_id) DO UPDATE SET
         round_tweet_id = COALESCE(EXCLUDED.round_tweet_id, sb_rounds.round_tweet_id),
-        round_cast_hash = COALESCE(EXCLUDED.round_cast_hash, sb_rounds.round_cast_hash),
-        updated_at = NOW()
+        round_cast_hash = COALESCE(EXCLUDED.round_cast_hash, sb_rounds.round_cast_hash)
     `, [round_id, letters, commit_deadline, reveal_deadline, round_tweet_id, round_cast_hash]);
   },
 
