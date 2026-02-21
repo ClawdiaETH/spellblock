@@ -1,18 +1,18 @@
 {
   "network": "base-mainnet",
   "chainId": 8453,
-  "deployedAt": "2026-02-08T08:42:00Z",
+  "deployedAt": "2026-02-20T00:00:00Z",
   "deployer": "0xf17b5dD382B048Ff4c05c1C9e4E24cfC5C6adAd9",
   "contracts": {
     "CLAWDIA": "0xbbd9aDe16525acb4B336b6dAd3b9762901522B07",
-    "DictionaryVerifier": "0xEEC7CE58b2B85F8FaBd631525DFCf18c219B433A",
-    "SpellEngine": "0x4eA869BF7f6496Cf359b70419A6ed20f27851FBA",
-    "SpellRegistry": "0xbAB63F8f8F0F924AD0750e1c20CD52D0F4cEf02d",
-    "SpellBlockGame": "0xa596aAd2edCE7B5A64707D5Bf7921B640A2c26F9",
-    "StakerRewardDistributor": "0x4FFdEDA2e839783F1825221aC882eb2F70eA73D5"
+    "DictionaryVerifier": "0x911731EFA7dD3d0d666e9803502f0FBF94d0BF97",
+    "SpellEngine": "0x4Ee325a1F4A1c715c40D729f23CE1507e5dD40Cf",
+    "SpellRegistry": "0xd6cd3f23194D14Bba28BA5fd2b2814dCFFAA897d",
+    "SpellBlockGame": "0x43F8658F3E85D1F92289e3036168682A9D14c683",
+    "StakerRewardDistributor": "0x52B19F97918544b66094F7cC2A5d73b6fB8447f7"
   },
   "verification": {
     "status": "pending",
-    "note": "Fresh deployment with correct owner/operator wallet"
+    "note": "Feb 20 redeployment - emergency admin functions added (setSpellRegistry, overrideRulerCommitHash, adminFinalizeRound, recoverERC20)"
   }
 }
