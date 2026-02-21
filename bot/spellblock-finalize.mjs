@@ -47,9 +47,13 @@ function getSignerUuid() {
 
 function log(...a) { console.log('[finalize]', new Date().toISOString(), ...a); }
 
+function bashEscape(s) {
+  return "'" + s.replace(/'/g, "'\\''") + "'";
+}
+
 async function postTweet(text) {
   try {
-    execSync(`~/clawd/skills/x-api/scripts/x-post.mjs ${JSON.stringify(text)}`, { shell: '/bin/bash' });
+    execSync(`~/clawd/skills/x-api/scripts/x-post.mjs ${bashEscape(text)}`, { shell: '/bin/bash' });
   } catch (e) { log('⚠️ Tweet failed:', e.message); }
 }
 
@@ -67,7 +71,7 @@ async function postCast(text) {
 async function sendBankr(toHandle, amountClawdia, memo) {
   const text = `@bankrbot send ${amountClawdia} CLAWDIA @${toHandle} memo: ${memo}`;
   try {
-    execSync(`~/clawd/skills/x-api/scripts/x-post.mjs ${JSON.stringify(text)}`, { shell: '/bin/bash' });
+    execSync(`~/clawd/skills/x-api/scripts/x-post.mjs ${bashEscape(text)}`, { shell: '/bin/bash' });
     log(`  💸 Sent ${amountClawdia} CLAWDIA → @${toHandle}`);
   } catch (e) {
     log(`  ❌ Bankr send failed for @${toHandle}:`, e.message);
@@ -88,11 +92,6 @@ async function main() {
   }
 
   log(`Finalizing round ${round.round_id}`);
-
-  // Read spell from contract (written by revealSeedAndRuler)
-  // Round struct field indices: 6=validLengths, 7=spellId, 8=spellParam
-  const roundFields = castCall(`rounds(uint256)(uint256,uint256,uint256,uint256)` + ` ${round.round_id}`)
-    .split('\n').map(s => s.trim());
 
   // Get spell details from SeedRevealed event
   const { createPublicClient, http, parseAbiItem } = await import('viem');
