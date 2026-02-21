@@ -164,7 +164,7 @@ async function main() {
     if (!newestId || BigInt(tweet.id) > BigInt(newestId)) newestId = tweet.id;
 
     // Extract first word-looking token from tweet text
-    const rawWord = extractWord(tweet.text);
+    const rawWord = extractWord(tweet.text, round.letters);
     if (!rawWord) {
       log(`  @${handle}: no word found in "${tweet.text.slice(0, 60)}"`);
       continue;
@@ -232,10 +232,12 @@ async function main() {
 }
 
 /**
- * Extract the first plausible word from a tweet
- * Strips @mentions, URLs, hashtags, emoji, punctuation
+ * Extract the intended game word from a tweet.
+ * Strips noise then tries each candidate against letter pool + dictionary —
+ * returns the first word that actually validates (not just the first 4-letter token).
+ * e.g. "I'm going with MITE" → skips "going" (not in pool), returns "MITE"
  */
-function extractWord(text) {
+function extractWord(text, letters) {
   const cleaned = text
     .replace(/@\w+/g, '')           // @mentions
     .replace(/https?:\/\/\S+/g, '') // URLs
@@ -243,8 +245,20 @@ function extractWord(text) {
     .replace(/[^a-zA-Z\s]/g, ' ')   // non-alpha
     .trim();
 
-  const words = cleaned.split(/\s+/).filter(w => w.length >= 4 && /^[a-zA-Z]+$/.test(w));
-  return words[0] || null;
+  const candidates = cleaned.split(/\s+/).filter(w => w.length >= 4 && /^[a-zA-Z]+$/.test(w));
+
+  // If letters known: return first candidate that passes full validation
+  if (letters) {
+    for (const w of candidates) {
+      const { valid } = validateEntry(w, letters);
+      if (valid) return w.toUpperCase();
+    }
+    // Nothing validated — fall back to longest candidate (let main validation reject it with a reason)
+    return candidates.sort((a, b) => b.length - a.length)[0]?.toUpperCase() || null;
+  }
+
+  // No letters context: return longest candidate as best guess
+  return candidates.sort((a, b) => b.length - a.length)[0]?.toUpperCase() || null;
 }
 
 main().catch(e => {

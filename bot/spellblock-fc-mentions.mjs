@@ -62,15 +62,22 @@ async function postReplyCast(parentHash, text) {
   }
 }
 
-function extractWord(text) {
+function extractWord(text, letters) {
   const cleaned = text
     .replace(/@\w+/g, '')
     .replace(/https?:\/\/\S+/g, '')
     .replace(/#\w+/g, '')
     .replace(/[^a-zA-Z\s]/g, ' ')
     .trim();
-  const words = cleaned.split(/\s+/).filter(w => w.length >= 4 && /^[a-zA-Z]+$/.test(w));
-  return words[0] || null;
+  const candidates = cleaned.split(/\s+/).filter(w => w.length >= 4 && /^[a-zA-Z]+$/.test(w));
+  if (letters) {
+    for (const w of candidates) {
+      const { valid } = validateEntry(w, letters);
+      if (valid) return w.toUpperCase();
+    }
+    return candidates.sort((a, b) => b.length - a.length)[0]?.toUpperCase() || null;
+  }
+  return candidates.sort((a, b) => b.length - a.length)[0]?.toUpperCase() || null;
 }
 
 function loadCursor(castHash) {
@@ -107,7 +114,7 @@ async function main() {
 
   // Get replies to the round cast via conversation endpoint
   const cursor = loadCursor(round.round_cast_hash);
-  const params = { conversation_identifier: round.round_cast_hash, type: 'cast', reply_depth: 1, limit: 50 };
+  const params = { identifier: round.round_cast_hash, type: 'hash', reply_depth: 1, limit: 50 };
   if (cursor) params.cursor = cursor;
 
   let data;
@@ -129,7 +136,7 @@ async function main() {
     const fid = cast.author?.fid?.toString();
     if (!handle || fid === BOT_FID) continue;
 
-    const rawWord = extractWord(cast.text);
+    const rawWord = extractWord(cast.text, round.letters);
     if (!rawWord) { log(`  @${handle}: no word found`); continue; }
 
     log(`  @${handle}: "${rawWord}"`);

@@ -118,11 +118,13 @@ async function main() {
   // Compose post text
   const commitDtStr = new Date(commitDeadline * 1000).toUTCString().replace(' GMT', ' UTC');
   const text =
-    `🔮 SpellBlock Round ${roundId} is LIVE!\n\n` +
-    `Letters: ${letters.split('').join(' ')}\n` +
-    `Spell: 🔒 revealed at ${commitDtStr}\n\n` +
-    `Reply with your best word to enter.\n` +
-    `Min stake: 1,000,000 $CLAWDIA | spellblock.app`;
+    `🔮 SpellBlock Round ${roundId}\n\n` +
+    `Letters: ${letters.split('').join(' ')}\n\n` +
+    `Make a word using only those letters.\n` +
+    `A secret Spell filter drops at ${commitDtStr} — your word must survive both filters to win.\n\n` +
+    `↩️ Reply with your word\n` +
+    `💰 You'll get a link to stake $CLAWDIA\n` +
+    `🏆 Best surviving words split the pot`;
 
   // Post to Twitter
   log('Posting to Twitter...');
