@@ -181,10 +181,11 @@ async function main() {
   for (const tweet of [...tweets].reverse()) {
     const handle = users[tweet.author_id];
     if (!handle) continue;
-    if (handle.toLowerCase() === BOT_HANDLE.toLowerCase()) continue; // skip our own
 
-    // Update newest ID tracker
+    // Always advance cursor, even for bot's own replies
     if (!newestId || BigInt(tweet.id) > BigInt(newestId)) newestId = tweet.id;
+
+    if (handle.toLowerCase() === BOT_HANDLE.toLowerCase()) continue; // skip our own
 
     // Extract first word-looking token from tweet text
     const rawWord = extractWord(tweet.text, round.letters);
