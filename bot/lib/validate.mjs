@@ -22,18 +22,13 @@ function getDict() {
 }
 
 /**
- * Check word uses only letters from the 8-letter pool (repeats allowed)
+ * Check word uses only letters from the 8-letter pool.
+ * Repeats are unlimited — if Z is in the pool, FIZZY, FUZZY, ZZZZ all pass.
+ * Each letter in the word just needs to appear at least once in the pool.
  */
 export function checkLetterPool(word, letters) {
-  const pool = letters.toLowerCase().split('');
-  const w = word.toLowerCase().split('');
-  const counts = {};
-  for (const l of pool) counts[l] = (counts[l] || 0) + 1;
-  for (const l of w) {
-    if (!counts[l]) return false;
-    counts[l]--;
-  }
-  return true;
+  const pool = new Set(letters.toLowerCase().split(''));
+  return word.toLowerCase().split('').every(l => pool.has(l));
 }
 
 /**
