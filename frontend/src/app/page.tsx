@@ -147,13 +147,13 @@ export default function Home() {
                 {[
                   {
                     n: '1',
-                    title: 'Craft your word',
-                    desc: 'Each round reveals a pool of letters. Build a word using only those letters — you\'re betting it survives hidden constraints.'
+                    title: 'Tweet your word',
+                    desc: 'Reply to the daily round tweet (or DM @ClawdiaBotAI) with your word. It must use only letters from the pool. The bot validates it and sends you an entry link.'
                   },
                   {
                     n: '2',
-                    title: 'Stake & commit',
-                    desc: 'Stake $CLAWDIA tokens. Your word is hashed onchain — nobody sees it, and you can\'t change it.'
+                    title: 'Stake $CLAWDIA',
+                    desc: 'Follow the /enter link from the bot reply. Connect your wallet and stake at least 1M $CLAWDIA to lock in your entry. Your word stays hidden until the reveal.'
                   },
                   {
                     n: '3',
@@ -163,7 +163,7 @@ export default function Home() {
                   {
                     n: '4',
                     title: 'Reveal & settle',
-                    desc: 'Reveal your word. Pass BOTH constraints = winner pool (90%). Pass spell but fail ruler = consolation (10%, recover stake only). Fail spell = stake joins the pot for winners.'
+                    desc: 'Reply to the round tweet with your word to reveal. Pass BOTH constraints = winner pool (90%). Pass spell but fail ruler = consolation (recover stake only). Fail spell = stake burned, joins pot for winners.'
                   }
                 ].map((step) => (
                   <div key={step.n} className="flex gap-3">
