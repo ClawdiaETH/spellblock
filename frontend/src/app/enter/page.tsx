@@ -10,7 +10,7 @@ import { CONTRACTS, ERC20_ABI } from '@/config/contracts'
 import { WalletButton } from '@/components/WalletButton'
 
 // Bot collection wallet — all entry payments go here
-const COLLECTION_WALLET = '0xf17b5dD382B048Ff4c05c1C9e4E24cfC5C6adAd9' as const
+const COLLECTION_WALLET = '0x615e3faa99dd7de64812128a953215a09509f16a' as const
 const MIN_STAKE = 1_000_000  // 1M CLAWDIA minimum
 
 function EnterPageInner() {
