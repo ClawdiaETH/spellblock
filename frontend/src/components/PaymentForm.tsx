@@ -23,7 +23,7 @@ function fmtClawdia(n: number): string {
   return n.toLocaleString()
 }
 
-function ConfirmedState({ word, roundId }: { word: string; roundId: string }) {
+function ConfirmedState({ word, roundId, txHash }: { word: string; roundId: string; txHash?: string }) {
   return (
     <div className="text-center space-y-4 py-4">
       <div className="text-6xl">✅</div>
@@ -47,6 +47,20 @@ function ConfirmedState({ word, roundId }: { word: string; roundId: string }) {
           📝 Return before <span className="font-mono font-semibold text-text">15:45 UTC</span> to reveal your word and claim your share
         </p>
       </div>
+      {txHash && (
+        <div className="bg-surface-2 border border-border rounded-xl px-4 py-3">
+          <p className="text-[10.5px] font-semibold text-text-dim uppercase tracking-wider mb-1">Transaction</p>
+          <a
+            href={`https://basescan.org/tx/${txHash}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[11px] font-mono break-all hover:text-accent transition-colors"
+            style={{ color: 'var(--accent)' }}
+          >
+            {txHash.slice(0, 10)}…{txHash.slice(-8)}
+          </a>
+        </div>
+      )}
     </div>
   )
 }
@@ -76,8 +90,17 @@ export default function PaymentForm({ roundId, word, handle, minStake }: Props) 
         stake_clawdia: Number(stake),
       }),
     })
-      .then(() => setStatus('done'))
-      .catch(() => setStatus('done'))
+      .then(res => {
+        if (!res.ok) {
+          console.error('[PaymentForm] confirm API returned', res.status)
+        }
+        setStatus('done')
+      })
+      .catch(err => {
+        console.error('[PaymentForm] confirm API failed:', err)
+        // Still show done — tx is confirmed onchain, DB update can be retried manually
+        setStatus('done')
+      })
   }, [isSuccess, txHash]) // eslint-disable-line react-hooks/exhaustive-deps
 
   async function handlePayment() {
@@ -103,7 +126,7 @@ export default function PaymentForm({ roundId, word, handle, minStake }: Props) 
   }
 
   if (status === 'done') {
-    return <ConfirmedState word={word} roundId={roundId} />
+    return <ConfirmedState word={word} roundId={roundId} txHash={txHash} />
   }
 
   if (!isConnected) {
