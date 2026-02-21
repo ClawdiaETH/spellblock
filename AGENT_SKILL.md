@@ -1,178 +1,78 @@
 ---
 name: spellblock
-description: Play SpellBlock - a daily onchain word game on Base. Commit blindly during commit phase, reveal during reveal phase, claim rewards.
-homepage: https://spellblock.vercel.app
+description: Play SpellBlock - a daily onchain word game on Base. Reply with a word on Twitter or Farcaster, stake $CLAWDIA, survive two secret filters to win the pot.
+homepage: https://spellblock.app
 metadata:
   {
     "openclaw":
       {
         "emoji": "🔮",
-        "requires": { "bins": ["cast", "jq", "node"] },
-        "install":
-          [
-            {
-              "id": "foundry",
-              "kind": "shell",
-              "script": "curl -L https://foundry.paradigm.xyz | bash && foundryup",
-              "bins": ["cast"],
-              "label": "Install Foundry (cast)",
-            },
-            {
-              "id": "jq",
-              "kind": "brew",
-              "formula": "jq",
-              "bins": ["jq"],
-              "label": "Install jq (brew)",
-            },
-          ],
+        "requires": { "bins": ["node"] },
       },
   }
 ---
 
-# SpellBlock
+# SpellBlock 🔮
 
-Daily onchain word game on Base. **Constraints are hidden during commit phase** - you commit blindly, then reveal when spell/ruler are exposed.
+Daily word game on Base. Reply with a word, stake $CLAWDIA, survive two filters, split the pot.
 
-## Game Flow
+## How to play
 
-### Commit Phase (16:00→08:00 UTC)
+1. Watch for the daily round post from [@ClawdiaBotAI](https://x.com/ClawdiaBotAI) on Twitter or [@clawdia](https://warpcast.com/clawdia) on Farcaster
+2. Reply with your word — must use only the 8 given letters (unlimited repeats)
+3. Bot validates instantly and sends you a payment link
+4. Go to [spellblock.app/enter](https://spellblock.app/enter), connect wallet, stake min 1,000,000 $CLAWDIA
+5. Wait for the Spell to drop at commit deadline
+6. Winning words split the pot
 
-**Visible:** Letter pool (8 letters)  
-**Hidden:** Spell type, spell parameter, valid lengths
+## Two filters
 
-Commit a word without knowing if it will match. Strategic guessing required.
+**Letter pool** — checked immediately when you reply:
+- Your word must use only letters from the given 8
+- Letters can repeat freely (FIZZY is valid if F, I, Z, Y are in the pool)
+- Must be in the 41k-word dictionary
 
-```bash
-# Check what's visible
-~/clawd/skills/spellblock/scripts/get-round-state.sh
+**Spell** — secret rule revealed at the commit deadline:
+- **Anchor** — word must start with a specific letter
+- **Seal** — word must end with a specific letter
+- **Veto** — word must NOT contain a specific letter
+- **Gem** — word must have two adjacent identical letters (e.g. FIZZY, MITT)
 
-# Manual commit (requires Merkle proof)
-~/clawd/skills/spellblock/scripts/commit-word.sh yourword
-```
+A word that passes both filters = fully valid = competes for the main pot.
+A word that passes the Spell but fails the length = consolation payout.
 
-### Reveal Phase (08:00→15:45 UTC)
+## Scoring
 
-Operator reveals constraints. Then reveal your word:
+- Score = word length × streak multiplier
+- Longer words score higher
+- Top 3 valid words split 60% of pot
+- Up to 5 consolation words split 30%
+- Remaining 10% = ops
 
-```bash
-~/clawd/skills/spellblock/scripts/reveal-word.sh
-```
+## Contracts (Base mainnet)
 
-### After Round Ends (15:45 UTC)
+| | |
+|---|---|
+| SpellBlockGame | `0x43F8658F3E85D1F92289e3036168682A9D14c683` |
+| $CLAWDIA | `0xbbd9aDe16525acb4B336b6dAd3b9762901522B07` |
 
-Claim rewards if you won:
+## Round schedule (UTC)
 
-```bash
-~/clawd/skills/spellblock/scripts/claim-rewards.sh auto
-```
+| Time | Event |
+|---|---|
+| 16:00 | Round opens |
+| 16:05 | Tweet + cast posted — start replying |
+| 08:00+1d | Spell revealed |
+| 15:45+1d | Round closes |
+| 15:55+1d | Winners announced, prizes sent |
 
-## Setup
+## Getting $CLAWDIA
 
-### 1. Wallet
+Buy on Uniswap on Base: `0xbbd9aDe16525acb4B336b6dAd3b9762901522B07`
 
-Store private key:
+## Links
 
-```bash
-echo "YOUR_PRIVATE_KEY" > ~/.clawdbot/secrets/signing_key
-chmod 600 ~/.clawdbot/secrets/signing_key
-```
-
-### 2. Fund Wallet
-
-- **ETH**: ~0.01 ETH for gas
-- **CLAWDIA**: Min stake per round (check contract)
-- **Buy CLAWDIA**: https://app.uniswap.org/swap?chain=base&outputCurrency=0xbbd9aDe16525acb4B336b6dAd3b9762901522B07
-
-### 3. Verify Setup
-
-```bash
-cast wallet address --private-key $(cat ~/.clawdbot/secrets/signing_key)
-cast balance <your-address> --rpc-url https://mainnet.base.org
-```
-
-## The Four Spells
-
-Only visible during reveal phase:
-
-- **Veto (0)**: Must NOT contain letter
-- **Anchor (1)**: Must START with letter
-- **Seal (2)**: Must END with letter
-- **Gem (3)**: Must have adjacent doubles (e.g., "COFFEE")
-
-## Clawdia's Ruler
-
-3 valid word lengths per round (e.g., [5,7,10]). Your word must match one.
-
-## Strategy
-
-### Blind Commitment
-
-Since constraints are hidden during commit:
-
-- Pick **medium length** words (6-8 letters) to hedge ruler
-- Include **doubles** to cover Gem spell
-- Start/end with **common letters** (E, S, T, R) for Anchor/Seal
-- Use **letter pool** heavily
-
-### Risk
-
-- **Consolation pool**: Pass spell but fail length = stake recovery (no profit)
-- **No optimization**: Cannot see constraints, must guess strategically
-
-## Dictionary
-
-41,367 words (4-12 letters) from american-english, frequency-filtered. Verified onchain via Merkle proofs (handled automatically by scripts).
-
-## Troubleshooting
-
-**"Word not in dictionary"**  
-Only curated 41k words are valid. Try alternates.
-
-**"Insufficient CLAWDIA"**  
-Buy more on Uniswap (see Setup).
-
-**"Not in reveal phase"**  
-Wait until 08:00 UTC.
-
-**Script errors before 16:00 UTC**  
-Round hasn't opened yet.
-
-## Contracts
-
-**Base Mainnet:**
-- CLAWDIA: `0xbbd9aDe16525acb4B336b6dAd3b9762901522B07`
-- SpellBlockGame: See `~/clawd/projects/spellblock-unified/deployments/latest.json`
-
-Scripts auto-read contract address from `latest.json`.
-
-## Community
-
-- **Website**: https://spellblock.vercel.app
-- **Twitter**: @ClawdiaBotAI
+- **Site**: https://spellblock.app
+- **Twitter**: [@ClawdiaBotAI](https://x.com/ClawdiaBotAI)
+- **Farcaster**: [@clawdia](https://warpcast.com/clawdia)
 - **GitHub**: https://github.com/ClawdiaETH/spellblock
-
-## Automated Play
-
-For interactive play with human input:
-
-```bash
-~/clawd/skills/spellblock/scripts/auto-play.sh
-```
-
-This checks phase and:
-- **Commit phase**: Prompts you for a word, then commits it
-- **Reveal phase**: Automatically reveals your committed word
-- **After round**: Claims rewards if you won
-
-## Files
-
-All scripts in `~/clawd/skills/spellblock/scripts/`:
-- `auto-play.sh` - Interactive phase-aware automation
-- `get-round-state.sh` - Read round info
-- `commit-word.sh <word>` - Commit with proof
-- `reveal-word.sh` - Reveal committed word
-- `claim-rewards.sh auto` - Claim winnings
-
-Data in `~/clawd/skills/spellblock/data/`:
-- `words.txt` (41k words)
-- `merkle-proofs.json` (48MB proofs)

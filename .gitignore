@@ -2,3 +2,4 @@
 .env*.local
 **/ROUND_*_SECRETS_*.txt
 bot/node_modules/
+*-preview.json
