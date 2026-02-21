@@ -38,10 +38,14 @@ function getSignerUuid() {
 
 function log(...a) { console.log('[round-open]', new Date().toISOString(), ...a); }
 
+function bashEscape(s) {
+  return "'" + s.replace(/'/g, "'\\''") + "'";
+}
+
 async function postTweet(text) {
   try {
     const out = execSync(
-      `~/clawd/skills/x-api/scripts/x-post.mjs ${JSON.stringify(text)}`,
+      `~/clawd/skills/x-api/scripts/x-post.mjs ${bashEscape(text)}`,
       { shell: '/bin/bash' }
     ).toString();
     // Extract tweet ID from URL in output
@@ -77,8 +81,8 @@ async function main() {
 
   // Check if already in DB
   const existing = await db.getCurrentRound();
-  if (existing?.round_id === roundId && existing?.round_tweet_id) {
-    log(`Round ${roundId} already in DB with tweet ID — skipping`);
+  if (existing?.round_id === roundId && existing?.round_tweet_id && existing?.round_cast_hash) {
+    log(`Round ${roundId} already in DB with tweet ID and cast hash — skipping`);
     await db.end();
     return;
   }

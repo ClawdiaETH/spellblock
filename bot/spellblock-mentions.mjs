@@ -73,10 +73,14 @@ function saveLastId(id) {
 
 // ── Reply helpers ─────────────────────────────────────────────────────
 
+function bashEscape(s) {
+  return "'" + s.replace(/'/g, "'\\''") + "'";
+}
+
 async function postReply(tweet_id, text) {
   try {
     execSync(
-      `~/clawd/skills/x-api/scripts/x-post.mjs --reply-to ${tweet_id} ${JSON.stringify(text)}`,
+      `~/clawd/skills/x-api/scripts/x-post.mjs --reply-to ${tweet_id} ${bashEscape(text)}`,
       { shell: '/bin/bash' }
     );
   } catch (e) {

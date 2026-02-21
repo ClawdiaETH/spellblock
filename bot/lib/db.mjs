@@ -4,7 +4,6 @@
  */
 
 import { readFileSync } from 'fs';
-import { createPool } from '@vercel/postgres';
 import pg from 'pg';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';

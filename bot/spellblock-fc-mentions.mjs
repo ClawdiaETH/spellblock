@@ -73,15 +73,22 @@ function extractWord(text) {
   return words[0] || null;
 }
 
-function loadCursor() {
-  if (existsSync(STATE_FILE)) return readFileSync(STATE_FILE, 'utf8').trim() || null;
+function loadCursor(castHash) {
+  if (existsSync(STATE_FILE)) {
+    const content = readFileSync(STATE_FILE, 'utf8').trim();
+    if (!content) return null;
+    const lines = content.split('\n');
+    const storedHash = lines[0];
+    const cursor = lines[1] || null;
+    if (storedHash === castHash) return cursor;
+  }
   return null;
 }
 
-function saveCursor(cursor) {
+function saveCursor(castHash, cursor) {
   const dir = join(__dir, '../.state');
   if (!existsSync(dir)) execSync(`mkdir -p ${dir}`);
-  writeFileSync(STATE_FILE, cursor);
+  writeFileSync(STATE_FILE, `${castHash}\n${cursor}`);
 }
 
 function log(...args) { console.log(LOG_PREFIX, new Date().toISOString(), ...args); }
@@ -99,7 +106,7 @@ async function main() {
   log(`Round ${round.round_id} | cast: ${round.round_cast_hash}`);
 
   // Get replies to the round cast via conversation endpoint
-  const cursor = loadCursor();
+  const cursor = loadCursor(round.round_cast_hash);
   const params = { conversation_identifier: round.round_cast_hash, type: 'cast', reply_depth: 1, limit: 50 };
   if (cursor) params.cursor = cursor;
 
@@ -169,7 +176,7 @@ async function main() {
     log(`  → ✅ entry created`);
   }
 
-  if (newCursor) saveCursor(newCursor);
+  if (newCursor) saveCursor(round.round_cast_hash, newCursor);
   await db.end();
   log('Done');
 }
