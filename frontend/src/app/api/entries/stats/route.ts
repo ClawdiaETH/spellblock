@@ -16,9 +16,8 @@ export async function GET(req: NextRequest) {
     )
     const row = result.rows[0]
     const count = parseInt(row.count, 10)
-    // payment_amount stored as wei (18 decimals) — convert to whole CLAWDIA
-    const potWei = BigInt(row.pot)
-    const potClawdia = Number(potWei / 10n ** 18n)
+    // payment_amount stored as raw CLAWDIA (not wei) — fits in bigint
+    const potClawdia = parseInt(row.pot, 10)
     return NextResponse.json({ count, pot: potClawdia }, {
       headers: { 'Cache-Control': 'no-store' }
     })

@@ -37,16 +37,17 @@ export async function POST(req: NextRequest) {
     }
 
     // Mark as paid
-    // stake_clawdia is the human-readable amount (e.g. 1000000); convert to wei string
-    const amountWei = stake_clawdia
-      ? (BigInt(Math.floor(Number(stake_clawdia))) * 10n ** 18n).toString()
-      : (1_000_000n * 10n ** 18n).toString()
+    // stake_clawdia is the human-readable CLAWDIA amount (e.g. 1000000)
+    // Store as-is — payment_amount is bigint, wei would overflow it
+    const amountRaw = stake_clawdia
+      ? Math.floor(Number(stake_clawdia))
+      : 1_000_000
 
     await pool.query(`
       UPDATE sb_entries
       SET status='paid', wallet=$2, payment_tx=$3, payment_amount=$4
       WHERE id=$1
-    `, [entry.id, wallet.toLowerCase(), tx_hash, amountWei])
+    `, [entry.id, wallet.toLowerCase(), tx_hash, amountRaw])
 
     console.log(`[entries/confirm] Round ${round_id} | @${handle} | ${word} | tx:${tx_hash}`)
 
