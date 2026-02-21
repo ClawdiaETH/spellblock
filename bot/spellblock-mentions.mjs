@@ -182,8 +182,19 @@ async function main() {
     // Always advance cursor first — must happen before any continue
     if (!newestId || BigInt(tweet.id) > BigInt(newestId)) newestId = tweet.id;
 
-    const handle = users[tweet.author_id];
-    if (!handle) continue;
+    let handle = users[tweet.author_id];
+    if (!handle) {
+      // Author expansion missing — fallback to direct user lookup (rare Twitter API quirk)
+      log(`  ⚠ Missing expansion for author_id ${tweet.author_id} — fetching directly`);
+      try {
+        const userData = await apiGet(`users/${tweet.author_id}`, { 'user.fields': 'username' });
+        handle = userData.data?.username;
+        if (handle) users[tweet.author_id] = handle; // cache for rest of loop
+      } catch (e) {
+        log(`  ❌ Could not resolve author_id ${tweet.author_id}: ${e.message}`);
+      }
+    }
+    if (!handle) { log(`  ❌ Skipping tweet ${tweet.id} — could not resolve author`); continue; }
     if (handle.toLowerCase() === BOT_HANDLE.toLowerCase()) continue; // skip our own
 
     // Extract first word-looking token from tweet text
