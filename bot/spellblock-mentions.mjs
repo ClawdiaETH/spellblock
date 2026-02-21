@@ -179,12 +179,11 @@ async function main() {
 
   // Process oldest first (tweets come newest-first from API)
   for (const tweet of [...tweets].reverse()) {
-    const handle = users[tweet.author_id];
-    if (!handle) continue;
-
-    // Always advance cursor, even for bot's own replies
+    // Always advance cursor first — must happen before any continue
     if (!newestId || BigInt(tweet.id) > BigInt(newestId)) newestId = tweet.id;
 
+    const handle = users[tweet.author_id];
+    if (!handle) continue;
     if (handle.toLowerCase() === BOT_HANDLE.toLowerCase()) continue; // skip our own
 
     // Extract first word-looking token from tweet text
@@ -203,7 +202,7 @@ async function main() {
       // Don't re-reply if already replied
       if (!existing.bot_replied) {
         await postReply(tweet.id,
-          `@${handle} You already submitted "${existing.word}" this round! ` +
+          `You already submitted "${existing.word}" this round! ` +
           `Pay to lock it in: ${PAYMENT_BASE}?r=${round.round_id}&w=${existing.word}&h=${handle}`
         );
         await db.markReplied(existing.id);
@@ -217,7 +216,7 @@ async function main() {
     if (!valid) {
       log(`  → invalid: ${reason}`);
       await postReply(tweet.id,
-        `@${handle} "${rawWord.toUpperCase()}" doesn't work — ${reason}. ` +
+        `"${rawWord.toUpperCase()}" doesn't work — ${reason}. ` +
         `Letters are ${round.letters}. Try again! 🔮`
       );
       continue;
@@ -240,7 +239,7 @@ async function main() {
     // Reply with payment link
     const payUrl = `${PAYMENT_BASE}?r=${round.round_id}&w=${rawWord.toUpperCase()}&h=${encodeURIComponent(handle)}`;
     await postReply(tweet.id,
-      `@${handle} ✅ "${rawWord.toUpperCase()}" looks good! ` +
+      `✅ "${rawWord.toUpperCase()}" looks good! ` +
       `Min 1,000,000 $CLAWDIA to enter (stake more = bigger pot):\n${payUrl}`
     );
     await db.markReplied(entry.id);

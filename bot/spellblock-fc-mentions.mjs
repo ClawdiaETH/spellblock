@@ -158,7 +158,7 @@ async function main() {
     if (!valid) {
       log(`  → invalid: ${reason}`);
       await postReplyCast(cast.hash,
-        `@${handle} "${rawWord.toUpperCase()}" doesn't work — ${reason}. ` +
+        `"${rawWord.toUpperCase()}" doesn't work — ${reason}. ` +
         `Letters are ${round.letters} 🔮`
       );
       continue;
@@ -176,7 +176,7 @@ async function main() {
 
     const payUrl = `${PAYMENT_BASE}?r=${round.round_id}&w=${rawWord.toUpperCase()}&h=${encodeURIComponent(handle)}`;
     await postReplyCast(cast.hash,
-      `@${handle} ✅ "${rawWord.toUpperCase()}" looks good! ` +
+      `✅ "${rawWord.toUpperCase()}" looks good! ` +
       `Min 1,000,000 $CLAWDIA to enter (stake more = bigger pot): ${payUrl}`
     );
     await db.markReplied(entry.id);
