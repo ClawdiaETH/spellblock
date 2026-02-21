@@ -213,7 +213,7 @@ async function main() {
     const payUrl = `${PAYMENT_BASE}?r=${round.round_id}&w=${rawWord.toUpperCase()}&h=${encodeURIComponent(handle)}`;
     await postReply(tweet.id,
       `@${handle} ✅ "${rawWord.toUpperCase()}" looks good! ` +
-      `Pay 1,000 $CLAWDIA to lock in your entry:\n${payUrl}`
+      `Min 1,000,000 $CLAWDIA to enter (stake more = bigger pot):\n${payUrl}`
     );
     await db.markReplied(entry.id);
 

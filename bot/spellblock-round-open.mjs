@@ -118,7 +118,7 @@ async function main() {
     `Letters: ${letters.split('').join(' ')}\n` +
     `Spell: 🔒 revealed at ${commitDtStr}\n\n` +
     `Reply with your best word to enter.\n` +
-    `Cost: 1,000 $CLAWDIA | spellblock.app`;
+    `Min stake: 1,000,000 $CLAWDIA | spellblock.app`;
 
   // Post to Twitter
   log('Posting to Twitter...');

@@ -11,7 +11,7 @@ import { WalletButton } from '@/components/WalletButton'
 
 // Bot collection wallet — all entry payments go here
 const COLLECTION_WALLET = '0xf17b5dD382B048Ff4c05c1C9e4E24cfC5C6adAd9' as const
-const ENTRY_COST = parseUnits('1000', 18)  // 1,000 CLAWDIA
+const MIN_STAKE = 1_000_000  // 1M CLAWDIA minimum
 
 function EnterPageInner() {
   const params = useSearchParams()
@@ -22,6 +22,7 @@ function EnterPageInner() {
   const { address, isConnected, chain } = useAccount()
   const [status, setStatus] = useState<'idle' | 'sending' | 'confirming' | 'done' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState('')
+  const [stake, setStake] = useState(MIN_STAKE.toString())
 
   const contracts = CONTRACTS[base.id]
 
@@ -30,6 +31,11 @@ function EnterPageInner() {
 
   async function handlePayment() {
     if (!address || !roundId || !word || !handle) return
+    const stakeNum = Number(stake)
+    if (!stakeNum || stakeNum < MIN_STAKE) {
+      setErrorMsg(`Minimum stake is ${MIN_STAKE.toLocaleString()} CLAWDIA`)
+      return
+    }
     setStatus('sending')
     setErrorMsg('')
 
@@ -38,7 +44,7 @@ function EnterPageInner() {
         address: contracts.clawdiaToken,
         abi: ERC20_ABI,
         functionName: 'transfer',
-        args: [COLLECTION_WALLET, ENTRY_COST],
+        args: [COLLECTION_WALLET, parseUnits(stakeNum.toString(), 18)],
         chainId: base.id,
       })
     } catch (e: any) {
@@ -54,7 +60,7 @@ function EnterPageInner() {
     fetch('/api/entries/confirm', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ round_id: Number(roundId), word, handle, wallet: address, tx_hash: txHash }),
+      body: JSON.stringify({ round_id: Number(roundId), word, handle, wallet: address, tx_hash: txHash, stake_clawdia: Number(stake) }),
     })
       .then(() => setStatus('done'))
       .catch(() => setStatus('done')) // tx landed regardless
@@ -90,9 +96,21 @@ function EnterPageInner() {
             <span className="text-white">@{handle}</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-gray-400 text-sm">Cost</span>
-            <span className="text-white font-semibold">1,000 $CLAWDIA</span>
+            <span className="text-gray-400 text-sm">Stake</span>
+            <div className="flex items-center gap-2">
+              <input
+                type="number"
+                value={stake}
+                min={MIN_STAKE}
+                step={100_000}
+                onChange={e => setStake(e.target.value)}
+                className="bg-gray-800 text-white text-right rounded-lg px-3 py-1 w-40
+                           border border-gray-700 focus:border-yellow-500 focus:outline-none text-sm"
+              />
+              <span className="text-gray-400 text-sm">$CLAWDIA</span>
+            </div>
           </div>
+          <p className="text-xs text-gray-600">min 1,000,000 · stake more = bigger pot</p>
           <div className="border-t border-gray-800 pt-3 text-xs text-gray-500">
             Spell + valid lengths revealed at commit deadline. Entry is scored after reveal.
           </div>
@@ -128,7 +146,7 @@ function EnterPageInner() {
                   className="w-full bg-yellow-500 hover:bg-yellow-400 disabled:opacity-50
                              text-black font-bold py-4 rounded-xl text-lg transition-all"
                 >
-                  {status === 'idle'       && 'Pay 1,000 $CLAWDIA'}
+                  {status === 'idle'       && `Stake ${Number(stake).toLocaleString()} $CLAWDIA`}
                   {status === 'sending'    && 'Check wallet…'}
                   {status === 'confirming' && 'Confirming…'}
                 </button>

@@ -163,7 +163,7 @@ async function main() {
     const payUrl = `${PAYMENT_BASE}?r=${round.round_id}&w=${rawWord.toUpperCase()}&h=${encodeURIComponent(handle)}`;
     await postReplyCast(cast.hash,
       `@${handle} ✅ "${rawWord.toUpperCase()}" looks good! ` +
-      `Pay 1,000 $CLAWDIA to lock in: ${payUrl}`
+      `Min 1,000,000 $CLAWDIA to enter (stake more = bigger pot): ${payUrl}`
     );
     await db.markReplied(entry.id);
     log(`  → ✅ entry created`);
