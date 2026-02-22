@@ -306,24 +306,22 @@ export default function Home() {
                   <div className="bg-surface-2 border border-border rounded-lg p-4 space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-text-dim">Player pool</span>
-                      <span className="font-mono font-semibold">97%</span>
+                      <span className="font-mono font-semibold">90%</span>
                     </div>
                     <div className="ml-4 space-y-1 text-xs text-text-dim">
-                      <div>→ 90% winners (passed BOTH spell + ruler)</div>
+                      <div>→ 60% winners (passed BOTH spell + ruler)</div>
                       <div className="ml-3 italic opacity-80 mt-0.5">Split by final word score (higher scores win more)</div>
-                      <div className="mt-1.5">→ 10% consolation (passed spell, failed ruler)</div>
+                      <div className="mt-1.5">→ 30% consolation (passed spell, failed ruler)</div>
                       <div className="ml-3 italic opacity-80 mt-0.5">Capped at your stake — you can't profit, only recover</div>
                     </div>
                     <div className="border-t border-border pt-2 mt-2">
                       <div className="flex justify-between">
-                        <span className="text-text-dim">Treasury fee</span>
-                        <span className="font-mono font-semibold">3%</span>
+                        <span className="text-text-dim">Ops reserve</span>
+                        <span className="font-mono font-semibold">10%</span>
                       </div>
                     </div>
                     <div className="ml-4 space-y-1 text-xs text-text-dim">
-                      <div>→ 1% burn (forever)</div>
-                      <div>→ 1% $CLAWDIA token stakers</div>
-                      <div>→ 1% operations</div>
+                      <div>→ Gas, fees, and operations</div>
                     </div>
                   </div>
                 </div>
