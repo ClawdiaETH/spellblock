@@ -6,12 +6,16 @@ import { base } from 'wagmi/chains'
 // Using a demo ID for development - should be replaced for production
 const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || '3a8170812b534d0ff9d794f19a901d64'
 
+// Base Builder Code attribution (ERC-8021) — bc_lul4sldw
+const DATA_SUFFIX = '0x62635f6c756c34736c64770b0080218021802180218021802180218021' as `0x${string}`
+
 // RainbowKit config for web environment (fallback)
 export const webConfig = getDefaultConfig({
   appName: 'SpellBlock',
   projectId,
   chains: [base],
   ssr: false,
+  dataSuffix: DATA_SUFFIX,
 })
 
 // Create combined config with Farcaster connector
@@ -39,6 +43,7 @@ export function getMiniAppConfig() {
       },
       connectors: [farcasterMiniApp()],
       ssr: false,
+      dataSuffix: DATA_SUFFIX,
     })
     
     console.log('Created Farcaster mini app config')
