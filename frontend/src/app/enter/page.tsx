@@ -209,21 +209,98 @@ function EnterPageInner() {
           </div>
         </div>
 
+        {/* Buy $CLAWDIA callout */}
+        <div className="w-full bg-surface border border-border rounded-xl px-4 py-3 flex items-center justify-between gap-3">
+          <div>
+            <p className="text-sm font-semibold text-text">Need $CLAWDIA?</p>
+            <p className="text-[11.5px] text-text-dim">Min 1M to enter · stake more = bigger pot</p>
+          </div>
+          <a
+            href="https://app.uniswap.org/swap?outputCurrency=0xbbd9aDe16525acb4B336b6dAd3b9762901522B07&chain=base"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold transition-all"
+            style={{ background: 'var(--accent)', color: '#fff' }}
+          >
+            Buy on Uniswap →
+          </a>
+        </div>
+
         {/* Payment form */}
         <div className="w-full">
           <PaymentForm roundId={roundId} word={word} handle={handle} minStake={MIN_STAKE} />
         </div>
-
-        {/* Footer note */}
-        <p className="text-[11px] text-text-dim text-center pb-4">
-          by{' '}
-          <a href="https://x.com/ClawdiaBotAI" target="_blank" rel="noopener noreferrer"
-            className="hover:text-accent transition-colors">
-            Clawdia
-          </a>
-          {' '}· on Base
-        </p>
       </main>
+
+      {/* Footer — matches homepage */}
+      <footer className="bg-surface border-t border-border mt-8">
+        <div className="max-w-lg mx-auto px-4 py-8">
+          <div className="text-center space-y-4">
+            <p className="text-text-dim">
+              Forged with 🐚 by{' '}
+              <a
+                href="https://x.com/ClawdiaBotAI"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-accent hover:text-accent/80 transition-colors font-medium"
+              >
+                Clawdia
+              </a>
+              {' '}on Base
+            </p>
+
+            <div className="flex justify-center flex-wrap gap-x-6 gap-y-2 text-sm">
+              <a
+                href="https://app.uniswap.org/swap?outputCurrency=0xbbd9aDe16525acb4B336b6dAd3b9762901522B07&chain=base"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-text-dim hover:text-accent transition-colors font-semibold"
+              >
+                💸 Buy $CLAWDIA
+              </a>
+              <a
+                href="https://basescan.org/token/0xbbd9aDe16525acb4B336b6dAd3b9762901522B07"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-text-dim hover:text-accent transition-colors"
+              >
+                📜 $CLAWDIA Token
+              </a>
+              <a
+                href="https://x.com/ClawdiaBotAI"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-text-dim hover:text-accent transition-colors"
+              >
+                🐚 Follow updates
+              </a>
+              <a
+                href="https://github.com/ClawdiaETH/spellblock"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-text-dim hover:text-accent transition-colors"
+              >
+                💻 View source
+              </a>
+              <a
+                href="/skill.md"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-text-dim hover:text-accent transition-colors font-mono font-semibold"
+                title="Enable your AI agent to play SpellBlock"
+              >
+                skill.md
+              </a>
+            </div>
+
+            <div className="pt-4 border-t border-border max-w-xl mx-auto">
+              <p className="text-text-dim text-xs">
+                Play responsibly. Only stake what you can afford to lose. SpellBlock is a game of skill with monetary stakes.
+              </p>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }
