@@ -305,23 +305,25 @@ export default function Home() {
                   <h3 className="font-bold text-sm mb-3">Pool distribution</h3>
                   <div className="bg-surface-2 border border-border rounded-lg p-4 space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-text-dim">Player pool</span>
-                      <span className="font-mono font-semibold">90%</span>
+                      <span className="text-text-dim">🏆 Winners (passed BOTH spell + ruler)</span>
+                      <span className="font-mono font-semibold">60%</span>
                     </div>
-                    <div className="ml-4 space-y-1 text-xs text-text-dim">
-                      <div>→ 60% winners (passed BOTH spell + ruler)</div>
-                      <div className="ml-3 italic opacity-80 mt-0.5">Split by final word score (higher scores win more)</div>
-                      <div className="mt-1.5">→ 30% consolation (passed spell, failed ruler)</div>
-                      <div className="ml-3 italic opacity-80 mt-0.5">Capped at your stake — you can't profit, only recover</div>
+                    <div className="ml-4 text-xs text-text-dim italic opacity-80">
+                      Top 3 split by final word score (longer = higher score)
                     </div>
-                    <div className="border-t border-border pt-2 mt-2">
-                      <div className="flex justify-between">
-                        <span className="text-text-dim">Ops reserve</span>
-                        <span className="font-mono font-semibold">10%</span>
-                      </div>
+                    <div className="border-t border-border pt-2 mt-1 flex justify-between">
+                      <span className="text-text-dim">🎲 Consolation (passed spell, failed ruler)</span>
+                      <span className="font-mono font-semibold">30%</span>
                     </div>
-                    <div className="ml-4 space-y-1 text-xs text-text-dim">
-                      <div>→ Gas, fees, and operations</div>
+                    <div className="ml-4 text-xs text-text-dim italic opacity-80">
+                      Capped at your stake — can't profit, only recover
+                    </div>
+                    <div className="border-t border-border pt-2 mt-1 flex justify-between">
+                      <span className="text-text-dim">⚙️ Ops reserve</span>
+                      <span className="font-mono font-semibold">10%</span>
+                    </div>
+                    <div className="ml-4 text-xs text-text-dim italic opacity-80">
+                      Gas, fees, and operations
                     </div>
                   </div>
                 </div>
@@ -341,7 +343,7 @@ export default function Home() {
                   </div>
                   <div className="mt-2 text-xs text-text-dim space-y-1">
                     <div>Streak bonus: 3 days (×1.10), 7 days (×1.25), 14 days (×1.50)</div>
-                    <div>Keep your streak by revealing a word each day — win or lose</div>
+                    <div>Keep your streak by entering a word each day — win or lose (reveal is automatic)</div>
                     <div className="pt-1">Winners split pool proportionally by final score</div>
                   </div>
                 </div>

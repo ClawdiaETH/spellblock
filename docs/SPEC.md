@@ -35,8 +35,8 @@ One round runs per day. Every round is an event.
    - Final hour triggers "Countdown Theater" mode
 4. Commit phase closes
 5. Spell is revealed
-6. **Reveal phase (4 hours)**
-   - Players reveal word + salt
+6. **Reveal phase (automated)**
+   - Bot automatically reveals all committed words + salts at 08:00 UTC
    - Live leaderboard updates as reveals land
 7. Validation and scoring
 8. Payouts executed (including per-round staker distribution)
@@ -82,8 +82,9 @@ One round runs per day. Every round is an event.
 - `jackpotThreshold` (500,000 $CLAWDIA — triggers Jackpot Round)
 - `jackpotBonusBps` (1000 = 10% of threshold, seeded from operations)
 - `payoutSplit`
-  - 90% valid winners
-  - 10% consolation winners
+  - 60% winners (passed BOTH spell + ruler)
+  - 30% consolation (passed spell, failed ruler — capped at stake, no profit)
+  - 10% ops
 - `maxWinnersValid` — dynamic (see Dynamic Winner Slots)
 - `maxWinnersConsolation` — dynamic (see Dynamic Winner Slots)
 
@@ -97,7 +98,7 @@ A revealed word is **eligible** if:
 - It can be formed from the letter pool (respecting multiplicity)
 - It satisfies the revealed Spell
 
-Words that fail *only* the Spell may be eligible for the consolation pool (see Consolation Pool Rules).
+Words that **pass the Spell but fail the Ruler** (word length not in valid set) are eligible for the consolation pool (see Consolation Pool Rules). Words that fail the Spell are not eligible for consolation — their stake is burned into the pot.
 
 ---
 
@@ -124,8 +125,9 @@ Words that fail *only* the Spell may be eligible for the consolation pool (see C
 
 ### Pot Distribution (remaining 97%):
 
-- **90%** to top valid submissions (spell-passing)
-- **10%** to top consolation submissions (spell-failing, see rules below)
+- **60%** to top valid submissions (passed BOTH spell + ruler)
+- **30%** to consolation submissions (passed spell, failed ruler — capped at stake, no profit)
+- **10%** ops reserve (gas, fees, operations)
 - Players who fail to reveal **forfeit their entire stake** to the pot
 
 ### Per-Round Staker Distribution (v3 — new)

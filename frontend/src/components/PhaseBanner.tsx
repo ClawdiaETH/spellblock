@@ -67,7 +67,7 @@ export function PhaseBanner({ phase, phaseEnd }: PhaseBannerProps) {
           <div className="text-[13px] text-text-dim max-w-[380px]">
             {isCommit
               ? 'Craft your word and stake your claim. Constraints are hidden.'
-              : 'Spell & ruler revealed. Show your word to claim winnings.'}
+              : 'Spell & ruler revealed. Auto-reveal is processing all entries — check back for results.'}
           </div>
         </div>
 

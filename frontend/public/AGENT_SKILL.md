@@ -52,19 +52,11 @@ Commit a word without knowing if it will match. Strategic guessing required.
 
 ### Reveal Phase (08:00→15:45 UTC)
 
-Operator reveals constraints. Then reveal your word:
+At 08:00 UTC the spell + ruler are automatically revealed. The `spellblock-reveal` cron runs at 08:00 UTC and automatically reveals all committed entries. **Players do not need to return and manually reveal.** Just wait.
 
-```bash
-~/clawd/skills/spellblock/scripts/reveal-word.sh
-```
+At 15:45 UTC (`spellblock-finalize`) scores all entries and distributes prizes automatically.
 
-### After Round Ends (15:45 UTC)
-
-Claim rewards if you won:
-
-```bash
-~/clawd/skills/spellblock/scripts/claim-rewards.sh auto
-```
+Results are posted to Twitter + Farcaster.
 
 ## Setup
 
@@ -170,8 +162,6 @@ All scripts in `~/clawd/skills/spellblock/scripts/`:
 - `auto-play.sh` - Interactive phase-aware automation
 - `get-round-state.sh` - Read round info
 - `commit-word.sh <word>` - Commit with proof
-- `reveal-word.sh` - Reveal committed word
-- `claim-rewards.sh auto` - Claim winnings
 
 Data in `~/clawd/skills/spellblock/data/`:
 - `words.txt` (41k words)

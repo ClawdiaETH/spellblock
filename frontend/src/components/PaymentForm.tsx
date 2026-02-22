@@ -41,10 +41,13 @@ function ConfirmedState({ word, roundId, txHash }: { word: string; roundId: stri
       <div className="bg-surface-2 border border-border rounded-xl px-4 py-3 text-left space-y-1.5">
         <p className="text-xs font-semibold text-text-dim uppercase tracking-wider">Next steps</p>
         <p className="text-sm text-text-dim">
-          🔔 Watch for the spell + ruler reveal at <span className="font-mono font-semibold text-text">08:00 UTC</span>
+          🔮 Spell + ruler revealed automatically at <span className="font-mono font-semibold text-text">08:00 UTC</span>
         </p>
         <p className="text-sm text-text-dim">
-          📝 Return before <span className="font-mono font-semibold text-text">15:45 UTC</span> to reveal your word and claim your share
+          🏆 Scoring + payouts distributed automatically at <span className="font-mono font-semibold text-text">15:45 UTC</span>
+        </p>
+        <p className="text-sm text-text-dim">
+          📩 Results posted to Twitter + Farcaster
         </p>
       </div>
       {txHash && (

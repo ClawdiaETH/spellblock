@@ -7,7 +7,7 @@
 
 ## Overview
 
-SpellBlock features a **daily play streak bonus** that rewards consistent participation. This is NOT a win streak — players maintain their streak by revealing a word each day, regardless of whether they win or lose.
+SpellBlock features a **daily play streak bonus** that rewards consistent participation. This is NOT a win streak — players maintain their streak by entering a word each day (reveal is automated). Streak increments regardless of win or loss.
 
 ---
 
@@ -39,7 +39,7 @@ function _updateStreak(address player) internal {
 **Rules:**
 1. If you played the previous round (roundId - 1): Streak increments by 1
 2. If you skipped any rounds: Streak resets to 1
-3. Streak is updated ONLY when you reveal your word
+3. Streak is updated automatically when the bot reveals your word at 08:00 UTC (no manual action required)
 
 ---
 

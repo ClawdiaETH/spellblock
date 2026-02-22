@@ -16,7 +16,7 @@ import { db } from './lib/db.mjs';
 
 const __dir = dirname(fileURLToPath(import.meta.url));
 const CONTRACT = '0x43F8658F3E85D1F92289e3036168682A9D14c683';
-const RPC = 'https://mainnet.base.org';
+const RPC = 'https://base.drpc.org';
 const FOUNDRY = '/Users/starl3xx/.foundry/bin';
 
 function cast(args) {
