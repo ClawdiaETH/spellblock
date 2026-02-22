@@ -72,8 +72,8 @@ export function checkSpell(word, spellId, spellParam) {
 export function validateEntry(word, letters) {
   const w = word.trim().toUpperCase();
 
-  if (!w || w.length < 4 || w.length > 8) {
-    return { valid: false, reason: `word must be 4–8 letters` };
+  if (!w || w.length < 4) {
+    return { valid: false, reason: `word must be at least 4 letters` };
   }
   if (!/^[A-Z]+$/.test(w)) {
     return { valid: false, reason: `letters only` };
