@@ -200,7 +200,7 @@ function EnterPageInner() {
                 exactly one of them — or it fails, regardless of the spell.
               </p>
               <p className="text-[11.5px] text-text-dim mt-2 italic">
-                Example: if valid lengths are <span className="font-mono font-semibold text-text">4, 6, 8</span> — a 5-letter word fails even if it passes the spell.
+                Example: if valid lengths are <span className="font-mono font-semibold text-text">5, 7, 10</span> — a 6-letter word fails even if it passes the spell.
               </p>
             </div>
           </div>
