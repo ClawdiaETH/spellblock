@@ -158,7 +158,7 @@ export default function Home() {
                   {
                     n: '3',
                     title: 'The double reveal',
-                    desc: 'At 08:00 UTC / 03:00 AM ET, TWO hidden constraints are revealed. Your word must pass BOTH to win:'
+                    desc: 'At 08:00 UTC / 03:00 AM ET, two hidden constraints are revealed. Your word must survive both:'
                   },
                   {
                     n: '4',
@@ -174,35 +174,53 @@ export default function Home() {
                       <div className="font-bold text-sm mb-1">{step.title}</div>
                       <div className="text-[12.5px] text-text-dim leading-relaxed">{step.desc}</div>
                       {step.n === '3' && (
-                        <div className="mt-2 space-y-1 text-[12.5px]">
-                          <div className="font-semibold text-[11.5px] uppercase tracking-wide opacity-60 mb-1.5 mt-2">
-                            Constraint 1: ONE of these spells
+                        <div className="mt-3 space-y-2.5">
+                          {/* Spell card */}
+                          <div className="bg-surface-2 border border-border rounded-xl overflow-hidden">
+                            <div className="px-3.5 py-2.5 border-b border-border flex items-center justify-between">
+                              <span className="text-[12.5px] font-semibold text-text">Constraint 1 — The Spell</span>
+                              <span className="text-[10px] font-mono text-text-dim bg-surface border border-border px-1.5 py-0.5 rounded">
+                                one of these
+                              </span>
+                            </div>
+                            <div className="divide-y divide-border">
+                              {[
+                                { icon: '🚫', name: 'Veto', desc: 'Must NOT contain a specific letter' },
+                                { icon: '⚓', name: 'Anchor', desc: 'Must START with a specific letter' },
+                                { icon: '🔒', name: 'Seal', desc: 'Must END with a specific letter' },
+                                { icon: '💎', name: 'Gem', desc: 'Must contain double letters (e.g. LL, OO)' },
+                              ].map(spell => (
+                                <div key={spell.name} className="flex items-center gap-2.5 px-3.5 py-2">
+                                  <span className="text-base w-5 text-center">{spell.icon}</span>
+                                  <span className="text-[12.5px] font-semibold text-text">{spell.name}</span>
+                                  <span className="text-[12.5px] text-text-dim">{spell.desc}</span>
+                                </div>
+                              ))}
+                            </div>
+                            <div className="px-3.5 py-2 border-t border-border">
+                              <p className="text-[11px] text-text-dim">
+                                Which spell is active is hidden until the commit deadline. Build your word to survive as many as possible.
+                              </p>
+                            </div>
                           </div>
-                          <div className="flex items-center gap-1.5 py-0.5">
-                            <span>🚫</span>
-                            <strong>Veto:</strong>
-                            <span className="opacity-70">Must NOT contain [letter]</span>
-                          </div>
-                          <div className="flex items-center gap-1.5 py-0.5">
-                            <span>⚓</span>
-                            <strong>Anchor:</strong>
-                            <span className="opacity-70">Must START with [letter]</span>
-                          </div>
-                          <div className="flex items-center gap-1.5 py-0.5">
-                            <span>🔒</span>
-                            <strong>Seal:</strong>
-                            <span className="opacity-70">Must END with [letter]</span>
-                          </div>
-                          <div className="flex items-center gap-1.5 py-0.5">
-                            <span>💎</span>
-                            <strong>Gem:</strong>
-                            <span className="opacity-70">Must have double letters</span>
-                          </div>
-                          <div className="font-semibold text-[11.5px] uppercase tracking-wide opacity-60 mb-1 mt-3">
-                            Constraint 2: The Ruler (ALWAYS required)
-                          </div>
-                          <div className="text-text-dim">
-                            Three valid word lengths are revealed. Your word must match one of them.
+
+                          {/* Ruler card */}
+                          <div className="bg-surface-2 border border-border rounded-xl overflow-hidden">
+                            <div className="px-3.5 py-2.5 border-b border-border flex items-center justify-between">
+                              <span className="text-[12.5px] font-semibold text-text">Constraint 2 — The Ruler</span>
+                              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded border"
+                                style={{ color: 'var(--gold)', borderColor: 'var(--gold)', background: 'var(--accent-glow)' }}>
+                                always required
+                              </span>
+                            </div>
+                            <div className="px-3.5 py-2.5">
+                              <p className="text-[12.5px] text-text-dim leading-relaxed">
+                                Three valid word lengths are hidden and revealed at the deadline. Your word must match exactly one of them — or it fails, regardless of the spell.
+                              </p>
+                              <p className="text-[11px] text-text-dim mt-1.5 italic">
+                                Example: if valid lengths are <span className="font-mono font-semibold text-text">4, 6, 8</span> — a 5-letter word fails even if it passes the spell.
+                              </p>
+                            </div>
                           </div>
                         </div>
                       )}
