@@ -159,6 +159,7 @@ export function GameBoard() {
   const chainId = base.id
   const contracts = CONTRACTS[chainId]
   const [currentTime, setCurrentTime] = useState(Math.floor(Date.now() / 1000))
+  const [dbStats, setDbStats] = useState<{ count: number; pot: number } | null>(null)
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -166,6 +167,20 @@ export function GameBoard() {
     }, 1000)
     return () => clearInterval(interval)
   }, [])
+
+  // Fetch live entry stats from DB (entries use off-chain Twitter flow, not onchain commits)
+  useEffect(() => {
+    if (!currentRoundId) return
+    const fetchStats = () => {
+      fetch(`/api/entries/stats?r=${currentRoundId.toString()}`)
+        .then(r => r.json())
+        .then(d => setDbStats(d))
+        .catch(() => {})
+    }
+    fetchStats()
+    const interval = setInterval(fetchStats, 30_000)
+    return () => clearInterval(interval)
+  }, [currentRoundId])
 
   const { data: currentRoundId } = useReadContract({
     address: contracts.spellBlockCore,
@@ -264,10 +279,10 @@ export function GameBoard() {
 
       {/* Main Content */}
       <main className="max-w-[600px] mx-auto px-4 py-5">
-        {/* Pot Display */}
+        {/* Pot Display — uses DB stats (entries are off-chain, contract pot stays 0) */}
         <PotDisplay
-          totalPot={roundData?.totalPot || 0n}
-          commitCount={Number(roundData?.commitCount || 0)}
+          totalPot={dbStats ? BigInt(dbStats.pot) * 10n ** 18n : 0n}
+          commitCount={dbStats?.count ?? 0}
           season={{ number: 3, day: 7 }}
         />
 
@@ -275,18 +290,7 @@ export function GameBoard() {
         <div className="animate-fadeInUp">
           {phase === RoundPhase.Commit && (
             <>
-              {/* Hidden constraints warning */}
-              <div className="flex gap-3 items-start p-4 mb-6 rounded-xl border bg-purple-50 dark:bg-purple-950/20 border-purple-200 dark:border-purple-800/30">
-                <div className="text-2xl flex-shrink-0 mt-0.5">🎭</div>
-                <div>
-                  <div className="font-semibold text-sm mb-1">Constraints hidden</div>
-                  <div className="text-xs text-text-dim leading-relaxed">
-                    ONE spell (Veto, Anchor, Seal, OR Gem) + three valid word lengths will be revealed at 08:00 UTC / 03:00 AM ET. Your word must pass BOTH. Hedge wisely.
-                  </div>
-                </div>
-              </div>
-
-              {/* Commit Form */}
+              {/* Commit Form — shown first so Connect Wallet is right below the entries tile */}
               {!hasCommitted && currentRoundId && (
                 <CommitForm
                   roundId={currentRoundId}
@@ -298,6 +302,17 @@ export function GameBoard() {
                   }}
                 />
               )}
+
+              {/* Hidden constraints warning */}
+              <div className="flex gap-3 items-start p-4 mb-6 rounded-xl border bg-purple-50 dark:bg-purple-950/20 border-purple-200 dark:border-purple-800/30">
+                <div className="text-2xl flex-shrink-0 mt-0.5">🎭</div>
+                <div>
+                  <div className="font-semibold text-sm mb-1">Constraints hidden</div>
+                  <div className="text-xs text-text-dim leading-relaxed">
+                    ONE spell (Veto, Anchor, Seal, OR Gem) + three valid word lengths will be revealed at 08:00 UTC / 03:00 AM ET. Your word must pass BOTH. Hedge wisely.
+                  </div>
+                </div>
+              </div>
 
               {hasCommitted && (
                 <div className="flex gap-3 items-start p-4 rounded-xl border animate-fadeInUp mt-4 bg-green-50 dark:bg-green-950/20 border-green-300 dark:border-green-800/40">

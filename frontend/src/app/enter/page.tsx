@@ -78,15 +78,20 @@ function EnterPageInner() {
       <header className="bg-surface border-b border-border sticky top-0 z-50">
         <div className="max-w-lg mx-auto px-4 py-3.5 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <span className="text-3xl" role="img" aria-label="Crystal Ball">🔮</span>
-            <div>
-              <h1 className="text-[22px] font-display font-normal tracking-tight text-text leading-tight">
-                SpellBlock
-              </h1>
-              <p className="text-[11px] text-text-dim font-body">
-                Round {roundId}
-              </p>
-            </div>
+            <a href="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
+              <span className="text-3xl" role="img" aria-label="Crystal Ball">🔮</span>
+              <div>
+                <h1 className="text-[22px] font-display font-normal tracking-tight text-text leading-tight">
+                  SpellBlock
+                </h1>
+                <p className="text-[11px] text-text-dim font-body">
+                  by <span className="hover:text-accent transition-colors">Clawdia</span>
+                </p>
+              </div>
+            </a>
+            <span className="font-mono text-[10.5px] font-medium px-[7px] py-[2px] bg-surface-2 border border-border rounded-[5px] text-text-dim">
+              Round #{roundId}
+            </span>
           </div>
           <ThemeToggle />
         </div>
