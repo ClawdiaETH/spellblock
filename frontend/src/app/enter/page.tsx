@@ -131,6 +131,28 @@ function EnterPageInner() {
           </div>
         )}
 
+        {/* Payment form */}
+        <div className="w-full">
+          <PaymentForm roundId={roundId} word={word} handle={handle} minStake={MIN_STAKE} />
+        </div>
+
+        {/* Buy $CLAWDIA callout */}
+        <div className="w-full bg-surface border border-border rounded-xl px-4 py-3 flex items-center justify-between gap-3">
+          <div>
+            <p className="text-sm font-semibold text-text">Need $CLAWDIA?</p>
+            <p className="text-[11.5px] text-text-dim">Min 1M to enter · stake more = bigger pot</p>
+          </div>
+          <a
+            href="https://app.uniswap.org/swap?outputCurrency=0xbbd9aDe16525acb4B336b6dAd3b9762901522B07&chain=base"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold transition-all"
+            style={{ background: 'var(--accent)', color: '#fff' }}
+          >
+            Buy on Uniswap →
+          </a>
+        </div>
+
         {/* Survival rules — what the word must survive */}
         <div className="w-full space-y-3">
           <h2 className="text-[13px] font-semibold uppercase tracking-widest text-text-dim px-0.5">
@@ -209,27 +231,6 @@ function EnterPageInner() {
           </div>
         </div>
 
-        {/* Buy $CLAWDIA callout */}
-        <div className="w-full bg-surface border border-border rounded-xl px-4 py-3 flex items-center justify-between gap-3">
-          <div>
-            <p className="text-sm font-semibold text-text">Need $CLAWDIA?</p>
-            <p className="text-[11.5px] text-text-dim">Min 1M to enter · stake more = bigger pot</p>
-          </div>
-          <a
-            href="https://app.uniswap.org/swap?outputCurrency=0xbbd9aDe16525acb4B336b6dAd3b9762901522B07&chain=base"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold transition-all"
-            style={{ background: 'var(--accent)', color: '#fff' }}
-          >
-            Buy on Uniswap →
-          </a>
-        </div>
-
-        {/* Payment form */}
-        <div className="w-full">
-          <PaymentForm roundId={roundId} word={word} handle={handle} minStake={MIN_STAKE} />
-        </div>
       </main>
 
       {/* Footer — matches homepage */}
