@@ -19,7 +19,7 @@ import { db } from './lib/db.mjs';
 
 const __dir = dirname(fileURLToPath(import.meta.url));
 const CONTRACT = '0x43F8658F3E85D1F92289e3036168682A9D14c683';
-const RPC = 'https://mainnet.base.org';
+const RPC = 'https://base-rpc.publicnode.com';
 const FOUNDRY = '/Users/starl3xx/.foundry/bin';
 const BOT_BANKR_HANDLE = 'ClawdiaBotAI';
 const CLAWDIA_DECIMALS = 18n;
@@ -157,9 +157,9 @@ async function main() {
 
   log(`Valid: ${valid.length}, Consolation: ${consol.length}`);
 
-  // Calculate pot (total CLAWDIA received)
-  const totalPaid = entries.reduce((sum, e) => sum + BigInt(e.payment_amount || 0), 0n);
-  const totalClawdia = Number(totalPaid / (10n ** CLAWDIA_DECIMALS));
+  // Calculate pot — payment_amount is stored as raw CLAWDIA (e.g. 1000000), not wei
+  const totalPaid = entries.reduce((sum, e) => sum + Number(e.payment_amount || 0), 0);
+  const totalClawdia = totalPaid;
 
   log(`Total pot: ${totalClawdia} CLAWDIA`);
 
