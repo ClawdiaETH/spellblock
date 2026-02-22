@@ -211,14 +211,14 @@ function EnterPageInner() {
               <span className="text-base">🏆</span>
               <div>
                 <span className="text-sm font-semibold" style={{ color: 'var(--green)' }}>Pass both</span>
-                <span className="text-sm text-text-dim ml-2">→ winner pool (90% of pot)</span>
+                <span className="text-sm text-text-dim ml-2">→ longest word wins · top 3 split 60% of pot</span>
               </div>
             </div>
             <div className="px-4 py-2.5 flex items-center gap-3">
               <span className="text-base">🎲</span>
               <div>
                 <span className="text-sm font-semibold" style={{ color: 'var(--gold)' }}>Pass spell, fail ruler</span>
-                <span className="text-sm text-text-dim ml-2">→ consolation (recover stake only)</span>
+                <span className="text-sm text-text-dim ml-2">→ consolation pool (30% of pot)</span>
               </div>
             </div>
             <div className="px-4 py-2.5 flex items-center gap-3">

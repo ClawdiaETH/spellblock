@@ -163,7 +163,7 @@ export default function Home() {
                   {
                     n: '4',
                     title: 'Reveal & settle',
-                    desc: 'Reply to the round tweet with your word to reveal. Pass BOTH constraints = winner pool (90%). Pass spell but fail ruler = consolation (recover stake only). Fail spell = stake burned, joins pot for winners.'
+                    desc: 'The bot auto-scores all entries at 15:45 UTC. The longest word that survives both constraints wins — top 3 split the winner pool (60% of pot). Ties broken by earliest entry. Pass spell but fail ruler = consolation (30% of pot, recover stake). Fail spell = stake burned, joins pot for winners.'
                   }
                 ].map((step) => (
                   <div key={step.n} className="flex gap-3">
