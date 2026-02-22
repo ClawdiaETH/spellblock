@@ -168,20 +168,6 @@ export function GameBoard() {
     return () => clearInterval(interval)
   }, [])
 
-  // Fetch live entry stats from DB (entries use off-chain Twitter flow, not onchain commits)
-  useEffect(() => {
-    if (!currentRoundId) return
-    const fetchStats = () => {
-      fetch(`/api/entries/stats?r=${currentRoundId.toString()}`)
-        .then(r => r.json())
-        .then(d => setDbStats(d))
-        .catch(() => {})
-    }
-    fetchStats()
-    const interval = setInterval(fetchStats, 30_000)
-    return () => clearInterval(interval)
-  }, [currentRoundId])
-
   const { data: currentRoundId } = useReadContract({
     address: contracts.spellBlockCore,
     abi: SPELLBLOCK_CORE_ABI,
@@ -204,6 +190,20 @@ export function GameBoard() {
     args: currentRoundId && address ? [currentRoundId, address] : undefined,
     chainId,
   })
+
+  // Fetch live entry stats from DB (entries are off-chain Twitter flow, contract pot stays 0)
+  useEffect(() => {
+    if (!currentRoundId) return
+    const fetchStats = () => {
+      fetch(`/api/entries/stats?r=${currentRoundId.toString()}`)
+        .then(r => r.json())
+        .then(d => setDbStats(d))
+        .catch(() => {})
+    }
+    fetchStats()
+    const interval = setInterval(fetchStats, 30_000)
+    return () => clearInterval(interval)
+  }, [currentRoundId])
 
   const roundData = round ? {
     roundId: round[0] as bigint,
