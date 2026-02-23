@@ -4,7 +4,7 @@ import { WagmiProvider } from 'wagmi'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit'
 import { ThemeProvider } from 'next-themes'
-import { getMiniAppConfig } from '@/config/wagmi'
+import { getMiniAppConfig, webConfig } from '@/config/wagmi'
 import { FarcasterMiniAppProvider } from '@/contexts/FarcasterMiniAppContext'
 import { useState, useEffect, useMemo, type ReactNode } from 'react'
 import '@rainbow-me/rainbowkit/styles.css'
@@ -46,12 +46,11 @@ export function Providers({ children }: { children: ReactNode }) {
     console.log('Mini app detection:', detected)
   }, [])
 
-  // Always use mini app config - it includes both Farcaster connector and can fallback
-  // This ensures the Farcaster connector is available when needed
+  // Use Farcaster connector for mini app, standard RainbowKit connectors for web
   const config = useMemo(() => {
-    if (!mounted) return getMiniAppConfig() // Use mini app config even during hydration
-    return getMiniAppConfig()
-  }, [mounted])
+    if (!mounted) return webConfig
+    return inMiniApp ? getMiniAppConfig() : webConfig
+  }, [mounted, inMiniApp])
 
   // Show children without wallet providers during SSR/initial render
   if (!mounted) {
