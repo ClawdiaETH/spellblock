@@ -3,3 +3,6 @@
 **/ROUND_*_SECRETS_*.txt
 bot/node_modules/
 *-preview.json
+*.db
+*.db-journal
+.state/
