@@ -7,12 +7,12 @@
   "miniapp": {
     "version": "1",
     "name": "SpellBlock",
-    "iconUrl": "https://spellblock.vercel.app/icon.png",
-    "homeUrl": "https://spellblock.vercel.app/",
-    "imageUrl": "https://spellblock.vercel.app/og-image.png",
+    "iconUrl": "https://spellblock.app/icon.png",
+    "homeUrl": "https://spellblock.app/",
+    "imageUrl": "https://spellblock.app/og-image.png",
     "buttonTitle": "Play Now",
-    "splashImageUrl": "https://spellblock.vercel.app/splash.png",
+    "splashImageUrl": "https://spellblock.app/splash.png",
     "splashBackgroundColor": "#f5f0ec",
-    "webhookUrl": "https://spellblock.vercel.app/api/webhook"
+    "webhookUrl": "https://spellblock.app/api/webhook"
   }
 }

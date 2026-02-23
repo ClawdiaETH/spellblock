@@ -108,7 +108,7 @@ export function PhaseBanner({ phase, phaseEnd }: PhaseBannerProps) {
         <PhaseStep 
           label="Settle" 
           time="15:45 UTC" 
-          timeET="10:45 AM ET"
+          timeET="9:45 AM CT"
           active={false} 
           color="var(--border)" 
         />

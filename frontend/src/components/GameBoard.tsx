@@ -94,7 +94,7 @@ function PhaseBanner({ phase, deadline, season }: { phase: RoundPhase; deadline:
           <div className="flex-[2] h-0.5 mx-1" style={{ background: phase >= RoundPhase.Reveal ? 'var(--accent)' : 'var(--border)' }} />
           <PhaseStep label="Reveal" time="08:00 UTC / 03:00 AM ET" active={phase >= RoundPhase.Reveal} color={phase >= RoundPhase.Reveal ? 'var(--purple)' : 'var(--border)'} />
           <div className="flex-1 h-0.5 mx-1" style={{ background: phase >= RoundPhase.Finalized ? 'var(--purple)' : 'var(--border)' }} />
-          <PhaseStep label="Settle" time="15:45 UTC / 10:45 AM ET" active={phase >= RoundPhase.Finalized} color={phase >= RoundPhase.Finalized ? 'var(--green)' : 'var(--border)'} />
+          <PhaseStep label="Settle" time="15:45 UTC / 9:45 AM CT" active={phase >= RoundPhase.Finalized} color={phase >= RoundPhase.Finalized ? 'var(--green)' : 'var(--border)'} />
         </div>
       </div>
     </div>
@@ -257,7 +257,7 @@ export function GameBoard() {
             <div className="text-text-dim space-y-1">
               <div>• Opens: 16:00 UTC / 11:00 AM ET</div>
               <div>• Commits close: 08:00 UTC / 03:00 AM ET</div>
-              <div>• Reveals close: 15:45 UTC / 10:45 AM ET</div>
+              <div>• Finalize: 15:45 UTC / 9:45 AM CT</div>
             </div>
           </div>
         </div>

@@ -38,8 +38,8 @@ print(''.join(pool[:8]))
 # Hash seed
 SEED_HASH=$(/Users/starl3xx/.foundry/bin/cast keccak "0x$SEED")
 
-# Pick 3 random valid lengths (4-8)
-LENGTHS=($(shuf -i 4-8 -n 3 | sort -n))
+# Pick 3 random valid lengths (min 4, no upper limit — e.g. 5, 7, 10)
+LENGTHS=($(shuf -i 5-12 -n 3 | sort -n))
 RULER_STRING="${LENGTHS[0]}${LENGTHS[1]}${LENGTHS[2]}"
 
 # Compute rulerCommitHash matching contract's keccak256(abi.encodePacked(roundId, l0, l1, l2, salt))
@@ -104,4 +104,4 @@ TX_HASH=$(echo $TX | jq -r '.transactionHash')
 echo "✅ Round $NEXT_ROUND opened!"
 echo "TX: https://basescan.org/tx/$TX_HASH"
 echo ""
-echo "Commit phase open until 08:00 UTC / 03:00 AM ET tomorrow"
+echo "Commit phase open until 08:00 UTC (3:00 AM CT) tomorrow"

@@ -34,9 +34,9 @@ echo "Commits: $NUM_COMMITS"
 
 TEXT="⏰ SpellBlock Round $ROUND commit phase closed!
 
-Seed revealed — you have 7h45m to reveal your words.
+Spell + Ruler are now revealed. Scoring is automatic — no action needed.
 
-Unrevealed commits = forfeited entry.
+Results + payouts at 15:45 UTC (9:45 AM CT).
 
 spellblock.app
 

@@ -1,7 +1,7 @@
 ---
 name: spellblock
 description: Play SpellBlock - a daily onchain word game on Base. Commit blindly during commit phase, reveal during reveal phase, claim rewards.
-homepage: https://spellblock.vercel.app
+homepage: https://spellblock.app
 metadata:
   {
     "openclaw":
@@ -133,13 +133,13 @@ Round hasn't opened yet.
 
 **Base Mainnet:**
 - CLAWDIA: `0xbbd9aDe16525acb4B336b6dAd3b9762901522B07`
-- SpellBlockGame: See `~/clawd/projects/spellblock-unified/deployments/latest.json`
+- SpellBlockGame: `0x43F8658F3E85D1F92289e3036168682A9D14c683`
 
 Scripts auto-read contract address from `latest.json`.
 
 ## Community
 
-- **Website**: https://spellblock.vercel.app
+- **Website**: https://spellblock.app
 - **Twitter**: @ClawdiaBotAI
 - **GitHub**: https://github.com/ClawdiaETH/spellblock
 

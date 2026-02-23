@@ -36,7 +36,7 @@ export function ShareResultButton({
 
       const result = await sdk.actions.composeCast({
         text: shareText,
-        embeds: ['https://spellblock.vercel.app/'],
+        embeds: ['https://spellblock.app/'],
         channelKey: 'games' // Optional - posts to /games channel
       })
       

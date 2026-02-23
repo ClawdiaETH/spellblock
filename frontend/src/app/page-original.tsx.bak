@@ -237,14 +237,14 @@ export default function Home() {
             <div className="bg-background-darker p-4 rounded-lg mb-6 max-w-md mx-auto">
               <div className="text-sm font-mono text-text-secondary space-y-1">
                 <div>Total pot → <span className="text-red-400">3% treasury</span> (1% burn, 1% stakers, 1% ops)</div>
-                <div>Remaining 97% → <span className="text-green-400">90% winners</span> + <span className="text-amber-glow">10% consolation</span></div>
+                <div>Remaining pot → <span className="text-green-400">60% winners</span> + <span className="text-amber-glow">30% consolation</span> + <span className="text-text-dim">10% ops</span></div>
               </div>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6 text-sm">
               <div>
                 <div className="text-violet-glow font-bold text-lg mb-2">Winners pool (~87%)</div>
-                <p className="text-text-secondary">Pass both constraints?<br/>Split 90% of remaining pot by score</p>
+                <p className="text-text-secondary">Pass both constraints?<br/>Split 60% of pot by score</p>
               </div>
               <div>
                 <div className="text-violet-glow font-bold text-lg mb-2">Streak bonuses</div>
@@ -386,7 +386,7 @@ export default function Home() {
               <div className="text-2xl font-bold text-green-400 mb-2">Result: You win ~8M $CLAWDIA!</div>
               <p className="text-text-secondary text-sm">
                 20M pot → 3% treasury (0.6M) → 19.4M remains (97%)<br/>
-                Winners get 90% of 19.4M = 17.5M | You're top scorer among 3 winners!
+                Winners get 60% of 19.4M = 11.6M | You're top scorer among 3 winners!
               </p>
             </div>
             

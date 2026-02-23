@@ -4,16 +4,16 @@ Automated social posting for SpellBlock game events.
 
 ## What It Does
 
-Posts aligned to actual on-chain game phases (contract: 16h commit + 7h45m reveal):
+Posts aligned to actual on-chain game phases (contract: 16h commit, automated reveal at 08:00 UTC):
 
 1. **Round Opens** (16:05 UTC / 10:05am CT daily)
    - Posts letters for the new round
    - Tags @base
 
-2. **Commit Closed / Reveal Begins** (08:05 UTC / 2:05am CT daily)
-   - Alerts players commit phase ended
-   - Warns about unrevealed forfeiture
-   - 7h45m reveal window remaining
+2. **Commit Closed / Spell Revealed** (08:05 UTC / 2:05am CT daily)
+   - Announces spell + ruler revealed
+   - Scoring is fully automated — players just wait
+   - Results at 15:45 UTC (9:45 AM CT)
 
 3. **Round Finalized** (15:50 UTC / 9:50am CT daily)
    - Announces results on-chain
@@ -79,7 +79,7 @@ Posts to both:
 
 - **Opens**: 16:00 UTC (10am CT)
 - **Commit closes**: 08:00 UTC (16 hours later / 2am CT)
-- **Reveal closes**: 15:45 UTC (7h45m after commit / 9:45am CT)
+- **Finalize**: 15:45 UTC (9:45 AM CT)
 - **Finalize**: 15:45 UTC (9:45am CT, ~15 min before next open)
 - **Next round**: 16:00 UTC (10am CT)
 

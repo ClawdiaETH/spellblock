@@ -240,8 +240,8 @@ export default function Home() {
                       Commits close · Spell + Ruler revealed
                     </div>
                     <div className="py-0.5">
-                      <span className="font-mono font-semibold text-text mr-1.5">15:45 UTC / 10:45 AM ET</span>
-                      Reveals close · Winners paid · Burns executed
+                      <span className="font-mono font-semibold text-text mr-1.5">15:45 UTC / 9:45 AM CT</span>
+                      Finalize · Winners paid · Burns executed
                     </div>
                   </div>
                 </div>
