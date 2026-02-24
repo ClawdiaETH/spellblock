@@ -86,27 +86,28 @@ async function main() {
   const roundId = round.round_id;
   log(`Round ${roundId} | letters: ${round.letters}`);
 
-  // Read SeedRevealed event from contract
+  // Read SeedAndRulerRevealed event from contract
   const latest = await client.getBlockNumber();
   const logs = await client.getLogs({
     address: CONTRACT,
     event: parseAbiItem(
-      'event SeedRevealed(uint256 indexed roundId, uint8 spellId, bytes1 spellParam, uint8[3] validLengths)'
+      'event SeedAndRulerRevealed(uint256 indexed roundId, uint8 spellId, bytes32 spellParam, uint8[3] validLengths)'
     ),
-    fromBlock: latest - 10000n,
+    fromBlock: latest - 25000n, // ~14h of Base blocks; covers the reveal→post window
     toBlock: 'latest',
   });
 
   const revealLog = logs.filter(l => Number(l.args.roundId) === roundId).pop();
   if (!revealLog) {
-    log('❌ No SeedRevealed event found — round not yet revealed or event window too narrow');
+    log('❌ No SeedAndRulerRevealed event found — round not yet revealed or event window too narrow');
     await db.end();
     return;
   }
 
   const spellId = Number(revealLog.args.spellId);
-  const spellParamByte = revealLog.args.spellParam; // bytes1 hex e.g. "0x4b"
-  const spellParam = Buffer.from(spellParamByte.slice(2), 'hex').toString('utf8').toUpperCase();
+  // spellParam is bytes32 — extract first non-zero byte as the spell letter
+  const spellParamHex = revealLog.args.spellParam; // bytes32 hex e.g. "0x4b00..."
+  const spellParam = Buffer.from(spellParamHex.slice(2, 4), 'hex').toString('utf8').toUpperCase();
   const validLengths = revealLog.args.validLengths.map(Number);
 
   const spell = SPELL_NAMES[spellId] ?? { name: `Spell #${spellId}`, desc: () => '???' };

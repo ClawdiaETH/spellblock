@@ -93,7 +93,7 @@ async function main() {
 
   log(`Finalizing round ${round.round_id}`);
 
-  // Get spell details from SeedRevealed event
+  // Get spell details from SeedAndRulerRevealed event
   const { createPublicClient, http, parseAbiItem } = await import('viem');
   const { base } = await import('viem/chains');
   const client = createPublicClient({ chain: base, transport: http(RPC) });
@@ -101,8 +101,8 @@ async function main() {
 
   const seedLogs = await client.getLogs({
     address: CONTRACT,
-    event: parseAbiItem('event SeedRevealed(uint256 indexed roundId, bytes8 letterPool, uint8 spellId, bytes32 spellParam, uint8[3] validLengths)'),
-    fromBlock: latest - 10000n,
+    event: parseAbiItem('event SeedAndRulerRevealed(uint256 indexed roundId, uint8 spellId, bytes32 spellParam, uint8[3] validLengths)'),
+    fromBlock: latest - 25000n, // ~14h of Base blocks (2s/block) covers reveal→finalize gap
     toBlock: 'latest',
   });
 
@@ -118,7 +118,7 @@ async function main() {
     validLengths = Array.from(seedLog.args.validLengths).map(Number);
     log(`Spell: id=${spellId} param="${spellParam}" lengths=${validLengths.join('/')}`);
   } else {
-    log('⚠️ No SeedRevealed event found — scoring by letter pool + dict only');
+    log('⚠️ No SeedAndRulerRevealed event found — scoring by letter pool + dict only (spell + ruler checks skipped)');
   }
 
   // Get all paid entries
