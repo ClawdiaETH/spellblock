@@ -57,12 +57,12 @@ async function postTweet(text) {
   }
 }
 
-async function postCast(text, channelId = 'ai') {
+async function postCast(text) {
   try {
     const res = await fetch('https://api.neynar.com/v2/farcaster/cast', {
       method: 'POST',
       headers: { 'x-api-key': getNeynarKey(), 'Content-Type': 'application/json' },
-      body: JSON.stringify({ signer_uuid: getSignerUuid(), text, channel_id: channelId }),
+      body: JSON.stringify({ signer_uuid: getSignerUuid(), text }),
     });
     const data = await res.json();
     return data.cast?.hash || null;
