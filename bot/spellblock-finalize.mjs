@@ -62,7 +62,7 @@ async function postCast(text) {
     await fetch('https://api.neynar.com/v2/farcaster/cast', {
       method: 'POST',
       headers: { 'x-api-key': getNeynarKey(), 'Content-Type': 'application/json' },
-      body: JSON.stringify({ signer_uuid: getSignerUuid(), text }),
+      body: JSON.stringify({ signer_uuid: getSignerUuid(), text, channel_id: 'ai' }),
     });
   } catch (e) { log('⚠️ Cast failed:', e.message); }
 }

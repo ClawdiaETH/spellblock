@@ -57,7 +57,7 @@ async function postTweet(text) {
   }
 }
 
-async function postCast(text, channelId = 'base') {
+async function postCast(text, channelId = 'ai') {
   try {
     const res = await fetch('https://api.neynar.com/v2/farcaster/cast', {
       method: 'POST',
