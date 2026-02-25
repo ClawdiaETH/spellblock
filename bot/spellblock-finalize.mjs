@@ -19,7 +19,7 @@ import { db } from './lib/db.mjs';
 
 const __dir = dirname(fileURLToPath(import.meta.url));
 const CONTRACT = '0x43F8658F3E85D1F92289e3036168682A9D14c683';
-const RPC = 'https://base.drpc.org';
+const RPC = 'https://base-rpc.publicnode.com'; // paginated getLogs in 9500-block chunks — most public RPCs limit to 10k
 const FOUNDRY = '/Users/starl3xx/.foundry/bin';
 const BOT_BANKR_HANDLE = 'ClawdiaBotAI';
 const CLAWDIA_DECIMALS = 18n;
@@ -99,12 +99,17 @@ async function main() {
   const client = createPublicClient({ chain: base, transport: http(RPC) });
   const latest = await client.getBlockNumber();
 
-  const seedLogs = await client.getLogs({
-    address: CONTRACT,
-    event: parseAbiItem('event SeedAndRulerRevealed(uint256 indexed roundId, uint8 spellId, bytes32 spellParam, uint8[3] validLengths)'),
-    fromBlock: latest - 25000n, // ~14h of Base blocks (2s/block) covers reveal→finalize gap
-    toBlock: 'latest',
-  });
+  // Paginate getLogs in 9500-block chunks — public RPCs limit ranges to 10k blocks
+  const CHUNK = 9500n;
+  const lookback = 25000n;
+  const startBlock = latest - lookback;
+  const seedAbi = parseAbiItem('event SeedAndRulerRevealed(uint256 indexed roundId, uint8 spellId, bytes32 spellParam, uint8[3] validLengths)');
+  const seedLogs = [];
+  for (let from = startBlock; from <= latest; from += CHUNK) {
+    const to = from + CHUNK - 1n < latest ? from + CHUNK - 1n : latest;
+    const chunk = await client.getLogs({ address: CONTRACT, event: seedAbi, fromBlock: from, toBlock: to });
+    seedLogs.push(...chunk);
+  }
 
   const seedLog = seedLogs.filter(l => Number(l.args.roundId) === round.round_id).pop();
 
