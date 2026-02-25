@@ -10,7 +10,7 @@
  *  4. Save last-seen tweet ID so we don't re-process
  */
 
-import { readFileSync, writeFileSync, existsSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync, unlinkSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { execSync } from 'child_process';
@@ -22,6 +22,50 @@ const STATE_FILE = join(__dir, '../.state/mentions-last-id.txt');
 const LOG_PREFIX = '[spellblock-mentions]';
 const PAYMENT_BASE = 'https://spellblock.app/enter';
 const BOT_HANDLE = 'ClawdiaBotAI';
+
+// ── Twitter Usage Cap Guard ───────────────────────────────────────────
+const CAP_FLAG = join(process.env.HOME, 'clawd/data/twitter-cap-exceeded.flag');
+
+/**
+ * Returns true if the monthly usage cap flag is set and not yet expired.
+ */
+function isCapFlagActive() {
+  if (!existsSync(CAP_FLAG)) return false;
+  try {
+    const expiry = new Date(readFileSync(CAP_FLAG, 'utf8').trim());
+    if (isNaN(expiry.getTime())) return false; // malformed — ignore
+    if (new Date() < expiry) return true;
+    // Flag expired — clear it
+    unlinkSync(CAP_FLAG);
+    return false;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Write the cap flag with expiry = 1st of next month, 00:00 UTC.
+ */
+function writeCapFlag() {
+  const now = new Date();
+  const expiry = new Date(Date.UTC(
+    now.getUTCMonth() === 11 ? now.getUTCFullYear() + 1 : now.getUTCFullYear(),
+    now.getUTCMonth() === 11 ? 0 : now.getUTCMonth() + 1,
+    1
+  ));
+  writeFileSync(CAP_FLAG, expiry.toISOString());
+  log(`⚠️ UsageCapExceeded — flag written, skipping until ${expiry.toISOString().slice(0, 10)}`);
+}
+
+/**
+ * Clear the cap flag on a successful API call.
+ */
+function clearCapFlag() {
+  if (existsSync(CAP_FLAG)) {
+    unlinkSync(CAP_FLAG);
+    log('✅ Cap flag cleared (successful API response)');
+  }
+}
 
 // ── Auth ──────────────────────────────────────────────────────────────
 
@@ -73,11 +117,28 @@ async function apiGet(path, params = {}) {
     const res2 = await fetch(url, {
       headers: { Authorization: `Bearer ${getToken()}` },
     });
-    if (!res2.ok) throw new Error(`Twitter API ${res2.status}: ${await res2.text()}`);
+    if (!res2.ok) {
+      const body2 = await res2.text();
+      if (body2.includes('UsageCapExceeded') || res2.status === 429) {
+        writeCapFlag();
+        throw new Error(`UsageCapExceeded: Twitter monthly cap hit — ${body2.slice(0, 120)}`);
+      }
+      throw new Error(`Twitter API ${res2.status}: ${body2}`);
+    }
+    clearCapFlag();
     return res2.json();
   }
 
-  if (!res.ok) throw new Error(`Twitter API ${res.status}: ${await res.text()}`);
+  if (!res.ok) {
+    const body = await res.text();
+    // Detect monthly usage cap — write flag so future runs skip immediately
+    if (body.includes('UsageCapExceeded') || res.status === 429) {
+      writeCapFlag();
+      throw new Error(`UsageCapExceeded: Twitter monthly cap hit — ${body.slice(0, 120)}`);
+    }
+    throw new Error(`Twitter API ${res.status}: ${body}`);
+  }
+  clearCapFlag();
   return res.json();
 }
 
@@ -119,6 +180,12 @@ function log(...args) {
 
 async function main() {
   log('Starting mention scan');
+
+  // 0. Pre-flight: skip if Twitter monthly cap is active
+  if (isCapFlagActive()) {
+    log('⏭️  Twitter monthly cap flag active — skipping scan (resets on 1st of month)');
+    return;
+  }
 
   // 1. Load current round
   const round = await db.getCurrentRound();
