@@ -119,7 +119,7 @@ async function apiGet(path, params = {}) {
     });
     if (!res2.ok) {
       const body2 = await res2.text();
-      if (body2.includes('UsageCapExceeded') || res2.status === 429) {
+      if (body2.includes('UsageCapExceeded')) {
         writeCapFlag();
         throw new Error(`UsageCapExceeded: Twitter monthly cap hit — ${body2.slice(0, 120)}`);
       }
@@ -132,7 +132,7 @@ async function apiGet(path, params = {}) {
   if (!res.ok) {
     const body = await res.text();
     // Detect monthly usage cap — write flag so future runs skip immediately
-    if (body.includes('UsageCapExceeded') || res.status === 429) {
+    if (body.includes('UsageCapExceeded')) {
       writeCapFlag();
       throw new Error(`UsageCapExceeded: Twitter monthly cap hit — ${body.slice(0, 120)}`);
     }
