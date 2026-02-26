@@ -16,7 +16,7 @@ import { db } from './lib/db.mjs';
 
 const __dir = dirname(fileURLToPath(import.meta.url));
 const CONTRACT = '0x43F8658F3E85D1F92289e3036168682A9D14c683';
-const RPC = 'https://base.drpc.org';
+const RPC = 'https://1rpc.io/base';
 
 const SPELL_NAMES = {
   0: { name: 'Veto 🚫',  desc: (p) => `word must NOT contain ${p}` },
@@ -87,15 +87,24 @@ async function main() {
   log(`Round ${roundId} | letters: ${round.letters}`);
 
   // Read SeedAndRulerRevealed event from contract
+  // Paginate in 9500-block chunks to stay under public RPC limits (10k max)
   const latest = await client.getBlockNumber();
-  const logs = await client.getLogs({
-    address: CONTRACT,
-    event: parseAbiItem(
-      'event SeedAndRulerRevealed(uint256 indexed roundId, uint8 spellId, bytes32 spellParam, uint8[3] validLengths)'
-    ),
-    fromBlock: latest - 25000n, // ~14h of Base blocks; covers the reveal→post window
-    toBlock: 'latest',
-  });
+  const LOOKBACK = 25000n;
+  const CHUNK = 9500n;
+  const eventAbi = parseAbiItem(
+    'event SeedAndRulerRevealed(uint256 indexed roundId, uint8 spellId, bytes32 spellParam, uint8[3] validLengths)'
+  );
+  const logs = [];
+  for (let from = latest - LOOKBACK; from <= latest; from += CHUNK) {
+    const to = from + CHUNK - 1n < latest ? from + CHUNK - 1n : latest;
+    const chunk = await client.getLogs({
+      address: CONTRACT,
+      event: eventAbi,
+      fromBlock: from,
+      toBlock: to,
+    });
+    logs.push(...chunk);
+  }
 
   const revealLog = logs.filter(l => Number(l.args.roundId) === roundId).pop();
   if (!revealLog) {
