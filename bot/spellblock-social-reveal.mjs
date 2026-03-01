@@ -16,7 +16,7 @@ import { db } from './lib/db.mjs';
 
 const __dir = dirname(fileURLToPath(import.meta.url));
 const CONTRACT = '0x43F8658F3E85D1F92289e3036168682A9D14c683';
-const RPC = 'https://base.drpc.org';
+const RPC = 'https://1rpc.io/base';
 
 const SPELL_NAMES = {
   0: { name: 'Veto 🚫',  desc: (p) => `word must NOT contain ${p}` },
@@ -79,27 +79,38 @@ async function main() {
   const { base } = await import('viem/chains');
   const client = createPublicClient({ chain: base, transport: http(RPC) });
 
-  // Get current round from DB
+  // Get current round from DB — reveal-seed-and-ruler.sh reveals for this same
+  // currently open round.
   const round = await db.getCurrentRound();
   if (!round) { log('No open round in DB'); await db.end(); return; }
 
   const roundId = round.round_id;
-  log(`Round ${roundId} | letters: ${round.letters}`);
+  const revealedRoundId = roundId; // The round that was just revealed on-chain
+  log(`Current round: ${roundId} | letters: ${round.letters} | Announcing reveal for round: ${revealedRoundId}`);
 
   // Read SeedAndRulerRevealed event from contract
+  // Paginate in 9500-block chunks to stay under public RPC limits (10k max)
   const latest = await client.getBlockNumber();
-  const logs = await client.getLogs({
-    address: CONTRACT,
-    event: parseAbiItem(
-      'event SeedAndRulerRevealed(uint256 indexed roundId, uint8 spellId, bytes32 spellParam, uint8[3] validLengths)'
-    ),
-    fromBlock: latest - 25000n, // ~14h of Base blocks; covers the reveal→post window
-    toBlock: 'latest',
-  });
+  const LOOKBACK = 25000n;
+  const CHUNK = 9500n;
+  const eventAbi = parseAbiItem(
+    'event SeedAndRulerRevealed(uint256 indexed roundId, uint8 spellId, bytes32 spellParam, uint8[3] validLengths)'
+  );
+  const logs = [];
+  for (let from = latest - LOOKBACK; from <= latest; from += CHUNK) {
+    const to = from + CHUNK - 1n < latest ? from + CHUNK - 1n : latest;
+    const chunk = await client.getLogs({
+      address: CONTRACT,
+      event: eventAbi,
+      fromBlock: from,
+      toBlock: to,
+    });
+    logs.push(...chunk);
+  }
 
-  const revealLog = logs.filter(l => Number(l.args.roundId) === roundId).pop();
+  const revealLog = logs.filter(l => Number(l.args.roundId) === revealedRoundId).pop();
   if (!revealLog) {
-    log('❌ No SeedAndRulerRevealed event found — round not yet revealed or event window too narrow');
+    log(`❌ No SeedAndRulerRevealed event found for round ${revealedRoundId} — not yet revealed or event window too narrow`);
     await db.end();
     return;
   }
@@ -118,7 +129,7 @@ async function main() {
 
   // Compose announcement
   const text =
-    `🔮 SpellBlock Round ${roundId} — Spell + Ruler revealed!\n\n` +
+    `🔮 SpellBlock Round ${revealedRoundId} — Spell + Ruler revealed!\n\n` +
     `${spell.name}: ${spellDesc}\n` +
     `📏 Valid lengths: ${validLengths.join(', ')}\n\n` +
     `Scoring + payouts happen automatically at 15:45 UTC (9:45 AM CT).\n\n` +
