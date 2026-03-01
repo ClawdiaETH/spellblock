@@ -79,13 +79,13 @@ async function main() {
   const { base } = await import('viem/chains');
   const client = createPublicClient({ chain: base, transport: http(RPC) });
 
-  // Get current round from DB — reveal event is for the PREVIOUS round (N-1),
-  // because reveal-seed-and-ruler.sh opens round N then we run to announce N-1.
+  // Get current round from DB — reveal-seed-and-ruler.sh reveals for this same
+  // currently open round.
   const round = await db.getCurrentRound();
   if (!round) { log('No open round in DB'); await db.end(); return; }
 
   const roundId = round.round_id;
-  const revealedRoundId = roundId - 1; // The round that was just revealed on-chain
+  const revealedRoundId = roundId; // The round that was just revealed on-chain
   log(`Current round: ${roundId} | letters: ${round.letters} | Announcing reveal for round: ${revealedRoundId}`);
 
   // Read SeedAndRulerRevealed event from contract
