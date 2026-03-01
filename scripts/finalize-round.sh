@@ -28,11 +28,13 @@ if [ -n "$REVEAL_DEADLINE" ] && [ "$NOW" -lt "$REVEAL_DEADLINE" ]; then
 fi
 
 echo "Finalizing Round $CURRENT_ROUND..."
+# Use || true so set -e doesn't exit on non-zero cast return (e.g. "Already finalized"),
+# letting the if/elif/else below handle all cases gracefully.
 TX=$(/Users/starl3xx/.foundry/bin/cast send $CONTRACT \
   "finalizeRound()" \
   --private-key $PRIVATE_KEY \
   --rpc-url https://mainnet.base.org \
-  --json 2>&1)
+  --json 2>&1) || true
 
 if echo "$TX" | grep -q "transactionHash"; then
   TX_HASH=$(echo $TX | /opt/homebrew/bin/jq -r '.transactionHash')
