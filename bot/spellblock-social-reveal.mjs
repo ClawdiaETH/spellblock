@@ -79,12 +79,14 @@ async function main() {
   const { base } = await import('viem/chains');
   const client = createPublicClient({ chain: base, transport: http(RPC) });
 
-  // Get current round from DB
+  // Get current round from DB — reveal event is for the PREVIOUS round (N-1),
+  // because reveal-seed-and-ruler.sh opens round N then we run to announce N-1.
   const round = await db.getCurrentRound();
   if (!round) { log('No open round in DB'); await db.end(); return; }
 
   const roundId = round.round_id;
-  log(`Round ${roundId} | letters: ${round.letters}`);
+  const revealedRoundId = roundId - 1; // The round that was just revealed on-chain
+  log(`Current round: ${roundId} | letters: ${round.letters} | Announcing reveal for round: ${revealedRoundId}`);
 
   // Read SeedAndRulerRevealed event from contract
   // Paginate in 9500-block chunks to stay under public RPC limits (10k max)
@@ -106,9 +108,9 @@ async function main() {
     logs.push(...chunk);
   }
 
-  const revealLog = logs.filter(l => Number(l.args.roundId) === roundId).pop();
+  const revealLog = logs.filter(l => Number(l.args.roundId) === revealedRoundId).pop();
   if (!revealLog) {
-    log('❌ No SeedAndRulerRevealed event found — round not yet revealed or event window too narrow');
+    log(`❌ No SeedAndRulerRevealed event found for round ${revealedRoundId} — not yet revealed or event window too narrow`);
     await db.end();
     return;
   }
@@ -127,7 +129,7 @@ async function main() {
 
   // Compose announcement
   const text =
-    `🔮 SpellBlock Round ${roundId} — Spell + Ruler revealed!\n\n` +
+    `🔮 SpellBlock Round ${revealedRoundId} — Spell + Ruler revealed!\n\n` +
     `${spell.name}: ${spellDesc}\n` +
     `📏 Valid lengths: ${validLengths.join(', ')}\n\n` +
     `Scoring + payouts happen automatically at 15:45 UTC (9:45 AM CT).\n\n` +
