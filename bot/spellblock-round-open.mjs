@@ -120,10 +120,13 @@ async function main() {
   const text =
     `🔮 SpellBlock Round ${roundId}\n\n` +
     `Letters: ${letters.split('').join(' ')}\n\n` +
-    `Make a word using only those letters.\n` +
-    `A secret Spell filter drops at ${commitDtStr} — your word must survive both filters to win.\n\n` +
+    `Build a word using only those letters (repeats allowed).\n\n` +
+    `At ${commitDtStr}, two hidden constraints drop:\n` +
+    `🪄 Spell — a letter rule (e.g. must start/end with X)\n` +
+    `📏 Ruler — 3 valid word lengths revealed\n\n` +
+    `Survive both to win. Longer words score higher.\n\n` +
     `↩️ Reply with your word\n` +
-    `💰 You'll get a link to stake $CLAWDIA\n` +
+    `💰 Stake $CLAWDIA to lock in your entry\n` +
     `🏆 Best surviving words split the pot`;
 
   // Post to Twitter
